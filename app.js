@@ -5,8 +5,12 @@ const bodyParse = require('koa-bodyparser')
 const session = require('koa-session2')
 const historyApiFallback = require('koa2-connect-history-api-fallback')
 const db = require('./server/config/db')
+const path = require('path')
+const serve = require('koa-static')
 
 const app = new Koa()
+
+app.use(serve(path.resolve('dist')))
 
 app.use(bodyParse())
 app.use(json())
