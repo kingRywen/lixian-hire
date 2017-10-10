@@ -3,6 +3,8 @@ let { verifyCaptcha } = require('koa-captcha-2')
 const user = require('../models/user')
 const jwt = require('jsonwebtoken')
 const configs = require('../config')
+const randomString = require('randomstring')
+const sha = require('node-sha1')
 
 const verify = async function (ctx) {
   if (!verifyCaptcha(ctx)) {
@@ -43,9 +45,16 @@ const isPhoneRegister = async (ctx) => {
 const sendPhone = async (ctx) => {
   if (!await isPhoneRegister(ctx)) {
     console.log('未被注册')
-    let body = Object.assign(configs, {
-      phone: ctx.request.body.phone
-    })
+    let Nonce = randomString.generate(30)
+    let CurTime = Date.now()
+    let CheckSum = sha(configs.yunxin.secret + Nonce + CurTime)
+    let body = {
+      Nonce,
+      CurTime,
+      CheckSum
+    }
+    let query = Object.assign(configs.yunxin, body)
+    console.log(query)
     
   } else {
     console.log('被注册')
