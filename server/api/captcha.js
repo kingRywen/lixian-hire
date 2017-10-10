@@ -2,6 +2,7 @@ let { drawCaptcha } = require('koa-captcha-2')
 let { verifyCaptcha } = require('koa-captcha-2')
 const user = require('../models/user')
 const jwt = require('jsonwebtoken')
+const configs = require('../config')
 
 const verify = async function (ctx) {
   if (!verifyCaptcha(ctx)) {
@@ -28,6 +29,29 @@ const verify = async function (ctx) {
   }
 }
 
+//  检测手机是否注册
+const isPhoneRegister = async (ctx) => {
+  let result = await user.getUserByName(ctx, ctx.request.body.phone)
+  if (result) {
+    return true
+  } else {
+    return false
+  }
+}
+
+// 发送验证码
+const sendPhone = async (ctx) => {
+  if (!await isPhoneRegister(ctx)) {
+    console.log('未被注册')
+    let body = Object.assign(configs, {
+      phone: ctx.request.body.phone
+    })
+    
+  } else {
+    console.log('被注册')
+  }
+}
+
 const test = async function (ctx) {
   ctx.body = 'success'
 }
@@ -35,5 +59,6 @@ const test = async function (ctx) {
 module.exports = {
   drawCaptcha,
   verify,
+  sendPhone,
   test
 }

@@ -15,6 +15,11 @@ let configs = {
   mongodbSecret: {
     user: '',
     pass: '' // mongodb的用户名和密码
+  },
+  // 网易云信api配置
+  yunxin: {
+    AppKey: 'a429004e7fe1f7a694e0b19866094b17',
+    secret: 'a5aeeddbefc3'
   }
 }
 // 可在config_default.js定义自己私有的配置

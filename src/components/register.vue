@@ -30,6 +30,12 @@
         <md-input type="text" @blur="isMobile" v-model="sendInfo.account"></md-input>
       </md-input-container>
 
+      <md-input-container>
+        <md-icon>stay_primary_portrait</md-icon>
+        <label>手机验证码</label>
+        <md-input type="text" v-model="sendInfo.phoneCode"></md-input><md-button type="button" style="width:auto" @click.native="getPhoneCode">获取验证码</md-button>
+      </md-input-container>
+
       <md-input-container md-has-password>
         <md-icon>lock</md-icon>
         <label>密码</label>
@@ -65,6 +71,7 @@ export default {
       captchaKey: Date.now(),
       sendInfo: {
         account: '',
+        phoneCode: '',
         password: '',
         captcha: '',
         role: '',
@@ -83,6 +90,19 @@ export default {
         this.$refs.snackbar.open()
         return
       }
+    },
+    getPhoneCode () {
+      console.log('获取手机验证码')
+      this.isMobile()
+      let self = this
+      this.$http.post('/api/sendCode', {
+        phone: self.sendInfo.account
+      })
+      .then((res) => {
+        console.log(res)
+      }, (err) => {
+        throw (err)
+      })
     },
     register () {
       let { captchaKey } = this
@@ -156,7 +176,7 @@ export default {
 
 #login-title {
   width: 100%;
-  min-height: 100px;
+  min-height: 40px;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-flow: column;
