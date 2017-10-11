@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const configs = require('../config')
 const randomString = require('randomstring')
 const sha = require('node-sha1')
+const koaRequest = require('koa2-request')
 
 const verify = async function (ctx) {
   if (!verifyCaptcha(ctx)) {
@@ -46,16 +47,35 @@ const sendPhone = async (ctx) => {
   if (!await isPhoneRegister(ctx)) {
     console.log('未被注册')
     let Nonce = randomString.generate(30)
-    let CurTime = Date.now()
+    let CurTime = Date.now().toString()
     let CheckSum = sha(configs.yunxin.secret + Nonce + CurTime)
-    let body = {
+    let AppKey = configs.yunxin.AppKey
+    let headers = {
+      AppKey,
       Nonce,
       CurTime,
       CheckSum
     }
-    let query = Object.assign(configs.yunxin, body)
-    console.log(query)
-    
+    headers = Object.assign({
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'charset': 'UTF-8'
+    }, headers)
+    console.log(headers)
+    try {
+      let result = await koaRequest({
+        url: configs.yunxin.sendUrl + '?mobile=' + ctx.request.body.phone,
+        method: 'post',
+        // json: true,
+        headers
+      })
+      console.log(result.body)
+    } catch (error) {
+      throw (error)
+      /* ctx.body = {
+        success: false,
+        info: error.message
+      } */
+    }
   } else {
     console.log('被注册')
   }
