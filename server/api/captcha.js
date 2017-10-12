@@ -60,26 +60,39 @@ const sendPhone = async (ctx) => {
       'Content-Type': 'application/x-www-form-urlencoded',
       'charset': 'UTF-8'
     }, headers)
-    console.log(headers)
     try {
       let result = await koaRequest({
-        url: configs.yunxin.sendUrl + '?mobile=' + ctx.request.body.phone,
+        // url: configs.yunxin.sendUrl + '?mobile=' + ctx.request.body.phone + '&code=',
+        url: `${configs.yunxin.sendUrl}?
+          mobile=${ctx.request.body.phone}&
+          templateid=${configs.yunxin.templateid}&
+          codeLen=${configs.yunxin.codeLen}`,
         method: 'post',
         // json: true,
         headers
       })
       console.log(result.body)
+      ctx.body = {
+        success: true,
+        info: {
+          code: result.body.code
+        }
+      }
     } catch (error) {
-      throw (error)
-      /* ctx.body = {
+      ctx.body = {
         success: false,
         info: error.message
-      } */
+      }
     }
   } else {
     console.log('被注册')
   }
 }
+
+/* // 校检验证码
+const checkPhoneCode = async (ctx) => {
+  
+} */
 
 const test = async function (ctx) {
   ctx.body = 'success'

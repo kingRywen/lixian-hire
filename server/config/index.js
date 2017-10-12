@@ -20,7 +20,9 @@ let configs = {
   yunxin: {
     sendUrl: 'https://api.netease.im/sms/sendcode.action',
     AppKey: 'a429004e7fe1f7a694e0b19866094b17',
-    secret: 'a5aeeddbefc3'
+    secret: 'a5aeeddbefc3',
+    templateid: 3094136,
+    codeLen: 6
   }
 }
 // 可在config_default.js定义自己私有的配置
