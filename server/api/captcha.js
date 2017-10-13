@@ -46,7 +46,10 @@ const isPhoneRegister = async (ctx) => {
 const sendPhone = async (ctx) => {
   if (!await isPhoneRegister(ctx)) {
     console.log('未被注册')
-    let Nonce = randomString.generate(30)
+    ctx.session[0] = {
+      register: false
+    }
+    /* let Nonce = randomString.generate(30)
     let CurTime = Date.now().toString()
     let CheckSum = sha(configs.yunxin.secret + Nonce + CurTime)
     let AppKey = configs.yunxin.AppKey
@@ -83,6 +86,11 @@ const sendPhone = async (ctx) => {
         success: false,
         info: error.message
       }
+    } */
+    ctx.cookies.set('id', '123123123123')
+    ctx.body = {
+      success: false,
+      info: '未被注册'
     }
   } else {
     console.log('被注册')
@@ -91,7 +99,6 @@ const sendPhone = async (ctx) => {
 
 /* // 校检验证码
 const checkPhoneCode = async (ctx) => {
-  
 } */
 
 const test = async function (ctx) {
