@@ -6,6 +6,7 @@ module.exports = function () {
   apiRouter.post('/register', apiCaptcha.verify)
   apiRouter.get('/captcha', apiCaptcha.drawCaptcha)
   apiRouter.post('/sendCode', apiCaptcha.sendPhone)
+  apiRouter.post('/validateCode', apiCaptcha.checkPhoneCode)
   apiRouter.get('/test', apiCaptcha.test)
   return apiRouter
 }

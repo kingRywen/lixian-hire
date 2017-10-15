@@ -1,49 +1,28 @@
-const uid = require('uid-safe')
+const Redis = require('ioredis')
+const { Store } = require('koa-session2')
 
-class Store {
+class RedisStore extends Store {
   constructor () {
-    this.session = {}
+    super()
+    this.redis = new Redis()
   }
 
-  decode (string) {
-    if (!string) return ''
-    let session = ''
+  async get (sid, ctx) {
+    let data = await this.redis.get(`SESSION:${sid}`)
+    return JSON.parse(data)
+  }
+
+  async set (session, { sid = this.getID(24), maxAge = 1000000 } = {}, ctx) {
     try {
-      // 存在session
-      session = new Buffer(string, 'base64').toString()
+        // Use redis set EX to automatically drop expired sessions
+      await this.redis.set(`SESSION:${sid}`, JSON.stringify(session), 'EX', maxAge / 1000)
     } catch (e) {}
-    return JSON.parse(session)
+    return sid
   }
 
-  encode (obj) {
-    // 存成buffer
-    return new Buffer(obj).toString('base64')
-  }
-
-  getID (length) {
-    // 获得uid
-    return uid.sync(length)
-  }
-
-  get (sid) {
-    return Promise.resolve(this.decode(this.session[sid]))
-  }
-
-  set (session, opts) {
-    opts = opts || {}
-    let sid = opts.sid
-    if (!sid) {
-      sid = this.getID(24)
-    }
-    this.session[sid] = this.encode(JSON.stringify(session))
-
-    return Promise.resolve(sid)
-  }
-
-  destroy (sid) {
-    delete this.session[sid]
-    return Promise.resolve()
+  async destroy (sid, ctx) {
+    return await this.redis.del(`SESSION:${sid}`)
   }
 }
 
-module.exports = Store
+module.exports = RedisStore

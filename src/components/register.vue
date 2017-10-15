@@ -33,7 +33,7 @@
       <md-input-container>
         <md-icon>stay_primary_portrait</md-icon>
         <label>手机验证码</label>
-        <md-input type="text" v-model="sendInfo.phoneCode"></md-input><md-button type="button" style="width:auto" @click.native="getPhoneCode">获取验证码</md-button>
+        <md-input type="text" v-model="sendInfo.phoneCode"></md-input><md-button type="button" :disabled="!btn" style="width:auto" @click.native="getPhoneCode">获取验证码 {{ sen }}</md-button>
       </md-input-container>
 
       <md-input-container md-has-password>
@@ -68,6 +68,8 @@ export default {
   data () {
     return {
       msg: '',
+      sen: null,
+      btn: true,
       captchaKey: Date.now(),
       sendInfo: {
         account: '',
@@ -88,18 +90,41 @@ export default {
       if (!reg.test(this.sendInfo.account)) {
         this.msg = '手机号码不正确.'
         this.$refs.snackbar.open()
-        return
+        return false
       }
+      if (!this.sendInfo.account) {
+        this.msg = '手机号码不能为空.'
+        this.$refs.snackbar.open()
+        return false
+      }
+      return true
     },
     getPhoneCode () {
       console.log('获取手机验证码')
-      this.isMobile()
+      if (!this.isMobile()) {
+        return
+      }
       let self = this
       this.$http.post('/api/sendCode', {
         phone: self.sendInfo.account
       })
       .then((res) => {
-        console.log(res)
+        if (res.data.success) {
+          self.btn = false
+          self.sen = 60
+          let timer = setInterval(function () {
+            self.sen--
+            if (self.sen < 0) {
+              clearInterval(timer)
+              self.btn = true
+              self.sen = null
+            }
+          }, 1000)
+        } else {
+          this.msg = res.data.info
+          this.$refs.snackbar.open()
+          return
+        }
       }, (err) => {
         throw (err)
       })
@@ -136,13 +161,34 @@ export default {
         this.$refs.snackbar.open()
         return
       }
+      // 验证手机验证码是否正确
+      this.$http.post('/api/validateCode', {
+        mobile: this.sendInfo.account,
+        code: this.sendInfo.phoneCode
+      })
+      .then((res) => {
+        console.log(res.data)
+        if (res.data.code === 200) { // 验证成功
+          this.sendRegister(obj)
+        } else {
+          this.msg = '手机验证码错误，请输入正确的验证码'
+          this.$refs.snackbar.open()
+        }
+      }, (err) => {
+        this.msg = err.message
+        this.$refs.snackbar.open()
+        this.$router.push('/register')
+      })
+      // this.$router.push('/register')
+    },
+    sendRegister (obj) {
       this.$http.post('/api/register', obj)
         .then((res) => {
           if (!res.data.success) {
             this.sendInfo.captcha = ''
             this.captchaKey = Date.now()
             this.$refs.input.$el.focus()
-            this.msg = '验证码输入错误.'
+            this.msg = '图形验证码输入错误.'
             this.$refs.snackbar.open()
           } else {
             this.msg = res.data.info
@@ -152,9 +198,9 @@ export default {
           }
         }, (err) => {
           this.msg = '请求错误:' + err.message
+          this.$refs.snackbar.open()
           sessionStorage.setItem('demo-token', null)
         })
-      // this.$router.push('/register')
     },
     reloadCaptcha () {
       this.captchaKey = Date.now()

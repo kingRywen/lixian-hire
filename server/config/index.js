@@ -19,6 +19,7 @@ let configs = {
   // 网易云信api配置
   yunxin: {
     sendUrl: 'https://api.netease.im/sms/sendcode.action',
+    verifyUrl: 'https://api.netease.im/sms/verifycode.action',
     AppKey: 'a429004e7fe1f7a694e0b19866094b17',
     secret: 'a5aeeddbefc3',
     templateid: 3094136,

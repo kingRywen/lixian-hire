@@ -7,22 +7,23 @@ const historyApiFallback = require('koa2-connect-history-api-fallback')
 require('./server/config/db')
 const path = require('path')
 const serve = require('koa-static')
-const Store = require('./server/config/session')
+const RedisStore = require('./server/config/session')
 
 const app = new Koa()
 
 app.use(serve(path.resolve('dist')))
 
-app.use(session({
-  store: new Store()
-}))
 app.use(bodyParse())
 app.use(json())
 app.use(logger())
 app.use(historyApiFallback({
   whiteList: ['/api', '/register']
 }))
-app.use(session())
+
+app.use(session({
+  key: 'SESSIONID',
+  store: new RedisStore()
+}))
 
 const home = require('./server/routes')()
 app.use(home.routes())
