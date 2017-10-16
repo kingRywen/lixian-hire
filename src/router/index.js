@@ -6,6 +6,7 @@ import info from '@/components/info'
 import jobDetail from '@/components/jobDetail'
 import company from '@/components/company'
 import register from '@/components/register'
+import adminhire from '@/components/admin-hire'
 
 Vue.use(Router)
 
@@ -42,6 +43,11 @@ export default new Router({
       path: '/register',
       name: 'register',
       component: register
+    },
+    {
+      path: '/adminhire',
+      name: 'adminhire',
+      component: adminhire
     },
     {
       path: '*',

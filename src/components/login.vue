@@ -58,7 +58,11 @@ export default {
         .then((res) => {
           if (res.data.success) { // 如果成功登陆
             sessionStorage.setItem('demo-token', res.data.token) // 用sessionstorage存下token
-            this.$router.push('/admin')
+            if (res.data.role === '1') {
+              this.$router.push('/admin')
+            } else {
+              this.$router.push('/adminhire')
+            }
             this.msg = '登陆成功.'
             console.log(this.$refs.snackbar)
             this.$refs.snackbar.open()

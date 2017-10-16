@@ -33,7 +33,7 @@
       <md-input-container>
         <md-icon>stay_primary_portrait</md-icon>
         <label>手机验证码</label>
-        <md-input type="text" v-model="sendInfo.phoneCode"></md-input><md-button type="button" :disabled="!btn" style="width:auto" @click.native="getPhoneCode">获取验证码 {{ sen }}</md-button>
+        <md-input type="text" v-model="sendInfo.phoneCode"></md-input><md-button type="button" :disabled="!btn" style="width:auto;margin:0" @click.native="getPhoneCode">获取验证码 {{ sen }}</md-button>
       </md-input-container>
 
       <md-input-container md-has-password>

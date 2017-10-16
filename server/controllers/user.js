@@ -35,10 +35,14 @@ const PostUserAuth = async (ctx) => {
         role: userInfo.role
       }
       const secret = 'jiang'
+      ctx.session.isRegister = true
+      ctx.session.isLogin = true
+      ctx.session.role = userInfo.role
       const token = jwt.sign(userToken, secret)
       ctx.body = {
         success: true,
-        token: token
+        token: token,
+        role: userInfo.role
       }
     }
   } else {
