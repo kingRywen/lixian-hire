@@ -39,7 +39,7 @@ const PostUserAuth = async (ctx) => {
       ctx.session.isLogin = true
       ctx.session.role = userInfo.role
       ctx.session.isEntireInfo = false
-      ctx.cookies.set('role', ctx.request.body.role, {
+      ctx.cookies.set('role', userInfo.role, {
         httpOnly: true,
         expires: new Date(new Date().getTime() + 60 * 20 * 1000)
       })
