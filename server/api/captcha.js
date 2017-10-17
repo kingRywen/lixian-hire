@@ -9,13 +9,19 @@ const koaRequest = require('koa2-request')
 
 // 验证图形验证码
 const verify = async function (ctx) {
+  ctx.session.isCheck = true // 取消手机验证
   if (!verifyCaptcha(ctx)) {
     ctx.body = {
       success: false,
-      info: '验证错误'
+      info: '图形验证码不正确'
+    }
+  } else if (!ctx.session.isCheck) {
+    ctx.body = {
+      success: false,
+      info: '手机验证码不正确'
     }
   } else {
-    let createInfo = await user.createUser(ctx)
+    let createInfo = ctx.request.body.role === '1' ? await user.createUser(ctx) : await user.createCompanyUser(ctx)
     console.log(createInfo)
     const userToken = {
       user_name: createInfo.user_name,
@@ -25,10 +31,20 @@ const verify = async function (ctx) {
     }
     const secret = 'jiang'
     const token = jwt.sign(userToken, secret)
+
+    // 设置session和cookie
+    ctx.session.isRegister = true
+    ctx.session.isLogin = true
+    ctx.session.role = ctx.request.body.role
+    ctx.cookies.set('role', ctx.request.body.role, {
+      httpOnly: true,
+      expires: new Date(new Date().getTime() + 60 * 20 * 1000)
+    })
     ctx.body = {
       success: true,
       info: '注册成功',
-      token: token
+      token: token,
+      role: ctx.request.body.role
     }
   }
 }
@@ -111,8 +127,7 @@ const checkPhoneCode = async (ctx) => {
           method: 'post',
           headers: ctx.session.headers
         })
-        ctx.session.isRegister = true
-        ctx.session.isLogin = true
+        ctx.session.isCheck = true
         ctx.body = result.body
       } catch (e) {
         throw (e)
@@ -131,6 +146,17 @@ const checkPhoneCode = async (ctx) => {
   }
 }
 
+// 退出登录
+const exit = async (ctx) => {
+  ctx.session = {}
+  ctx.cookies.set('SESSIONID', null)
+    .set('role', null)
+  ctx.body = {
+    success: true,
+    info: '清除缓存成功'
+  }
+}
+
 const test = async function (ctx) {
   ctx.body = 'success'
 }
@@ -140,5 +166,6 @@ module.exports = {
   verify,
   sendPhone,
   checkPhoneCode,
+  exit,
   test
 }

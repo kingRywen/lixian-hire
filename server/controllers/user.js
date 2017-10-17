@@ -38,6 +38,9 @@ const PostUserAuth = async (ctx) => {
       ctx.session.isRegister = true
       ctx.session.isLogin = true
       ctx.session.role = userInfo.role
+      ctx.cookies.set('role', userInfo.role, {
+        httpOnly: true
+      })
       const token = jwt.sign(userToken, secret)
       ctx.body = {
         success: true,

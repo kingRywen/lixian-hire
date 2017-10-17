@@ -151,6 +151,11 @@ export default {
         this.$refs.snackbar.open()
         return
       }
+      /* if (!obj.phoneCode) { // 取消手机验证
+        this.msg = '手机验证码不能为空.'
+        this.$refs.snackbar.open()
+        return
+      } */
       if (!obj.password) {
         this.msg = '密码不能为空.'
         this.$refs.snackbar.open()
@@ -161,8 +166,9 @@ export default {
         this.$refs.snackbar.open()
         return
       }
+      this.sendRegister(obj) // 取消手机验证
       // 验证手机验证码是否正确
-      this.$http.post('/api/validateCode', {
+      /* this.$http.post('/api/validateCode', { // 取消手机验证
         mobile: this.sendInfo.account,
         code: this.sendInfo.phoneCode
       })
@@ -178,7 +184,7 @@ export default {
         this.msg = err.message
         this.$refs.snackbar.open()
         this.$router.push('/register')
-      })
+      }) */
       // this.$router.push('/register')
     },
     sendRegister (obj) {
@@ -188,13 +194,17 @@ export default {
             this.sendInfo.captcha = ''
             this.captchaKey = Date.now()
             this.$refs.input.$el.focus()
-            this.msg = '图形验证码输入错误.'
+            this.msg = res.data.info
             this.$refs.snackbar.open()
           } else {
             this.msg = res.data.info
             this.$refs.snackbar.open()
             sessionStorage.setItem('demo-token', res.data.token)
-            this.$router.push('/admin')
+            if (Number(res.data.role) === 1) {
+              this.$router.push('/admin')
+            } else {
+              this.$router.push('/adminhire')
+            }
           }
         }, (err) => {
           this.msg = '请求错误:' + err.message

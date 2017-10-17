@@ -7,6 +7,8 @@ import jobDetail from '@/components/jobDetail'
 import company from '@/components/company'
 import register from '@/components/register'
 import adminhire from '@/components/admin-hire'
+import myJobs from '@/components/company/myJobs'
+import companyAdd from '@/components/company/add'
 
 Vue.use(Router)
 
@@ -47,7 +49,11 @@ export default new Router({
     {
       path: '/adminhire',
       name: 'adminhire',
-      component: adminhire
+      component: adminhire,
+      children: [
+        {path: '', component: myJobs},
+        {path: 'add', component: companyAdd}
+      ]
     },
     {
       path: '*',

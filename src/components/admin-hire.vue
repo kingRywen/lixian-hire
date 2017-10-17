@@ -8,9 +8,6 @@
 
       <h2 class="md-title" style="flex: 1">礼贤招聘</h2>
 
-      <md-button class="md-icon-button" @click="toggleLeftSidenav">
-        <md-icon>search</md-icon>
-      </md-button>
     </md-toolbar>
 
     <md-sidenav class="md-left" ref="leftSidenav">
@@ -31,13 +28,16 @@
       <div class="phone-viewport">
         <md-list>
           <md-list-item>
-            <router-link to="/"><md-icon>whatshot</md-icon> <span>我的简历</span></router-link>
+            <router-link to="/"><md-icon>whatshot</md-icon> <span>公司信息</span></router-link>
           </md-list-item>
           <md-list-item>
-            <router-link to="/"><md-icon>whatshot</md-icon> <span>投递状态</span></router-link>
+            <router-link to="/"><md-icon>whatshot</md-icon> <span>收到的简历</span></router-link>
           </md-list-item>
           <md-list-item>
             <router-link to="/"><md-icon>whatshot</md-icon> <span>我的收藏</span></router-link>
+          </md-list-item>
+          <md-list-item @click="exit" class="md-primary">
+            <md-icon>whatshot</md-icon> <span>退出</span>
           </md-list-item>
         </md-list>
       </div>
@@ -45,29 +45,7 @@
       </md-sidenav>
   </div>
 
-
-  <md-list class="custom-list md-triple-line showItems">
-    <md-subheader>热门职位</md-subheader>
-      <md-list-item v-for="(item,index) in items" :key="index">
-        <router-link :to="'/job-detail/' + item.id">
-          <md-avatar>
-            <img :src="item.companyLogoUrl" alt="People">
-          </md-avatar>
-
-          <div class="md-list-text-container">
-            <span>{{ item.job }}</span>
-            <span>{{ item.companyName }}</span>
-            <p>{{ item.tags.join('|') }}</p>
-          </div>
-          <div class="money">{{ item.money }}</div>
-          <!-- <md-button class="md-icon-button md-list-action">
-            
-          </md-button> -->
-        </router-link>
-
-        <md-divider class="md-inset"></md-divider>
-      </md-list-item>
-    </md-list>
+  <router-view></router-view>
 </div>
 </template>
 <script>
@@ -77,65 +55,15 @@ export default {
   created () {
     const userInfo = this.getUserInfo() // 获取用户信息
     if (userInfo != null) {
-      console.log(userInfo)
       this.userName = userInfo.name
-      this.user_name = userInfo.role !== 1 ? '求职者' : '招聘方'
+      this.user_name = userInfo.role === '1' ? '求职者' : '招聘方'
     }
   },
   data () {
     return {
       userName: '',
       user_name: '',
-      info: '',
-      /* items: [] */
-      items: [{
-        id: 123,
-        companyLogoUrl: 'https://placeimg.com/40/40/people/1',
-        companyName: '应用材料（中国）有限公司',
-        job: '芯片模拟电路设计工程师',
-        tags: ['上海', '应届生', '在校生', '本科及以上', '全职'],
-        money: '50万-100万'
-      },
-      {
-        id: 123,
-        companyLogoUrl: 'https://placeimg.com/40/40/people/1',
-        companyName: '应用材料（中国）有限公司',
-        job: '芯片模拟电路设计工程师',
-        tags: ['上海', '应届生', '在校生', '本科及以上', '全职'],
-        money: '50万-100万'
-      },
-      {
-        id: 123,
-        companyLogoUrl: 'https://placeimg.com/40/40/people/1',
-        companyName: '应用材料（中国）有限公司',
-        job: '芯片模拟电路设计工程师',
-        tags: ['上海', '应届生', '在校生', '本科及以上', '全职'],
-        money: '50万-100万'
-      },
-      {
-        id: 123,
-        companyLogoUrl: 'https://placeimg.com/40/40/people/1',
-        companyName: '应用材料（中国）有限公司',
-        job: '芯片模拟电路设计工程师',
-        tags: ['上海', '应届生', '在校生', '本科及以上', '全职'],
-        money: '50万-100万'
-      },
-      {
-        id: 123,
-        companyLogoUrl: 'https://placeimg.com/40/40/people/1',
-        companyName: '应用材料（中国）有限公司',
-        job: '芯片模拟电路设计工程师',
-        tags: ['上海', '应届生', '在校生', '本科及以上', '全职'],
-        money: '50万-100万'
-      },
-      {
-        id: 123,
-        companyLogoUrl: 'https://placeimg.com/40/40/people/1',
-        companyName: '应用材料（中国）有限公司',
-        job: '芯片模拟电路设计工程师',
-        tags: ['上海', '应届生', '在校生', '本科及以上', '全职'],
-        money: '50万-100万'
-      }]
+      info: ''
     }
   },
   methods: {
@@ -154,6 +82,14 @@ export default {
       } else {
         return null
       }
+    },
+    exit () {
+      console.log('退出')
+      this.$http.get('/api/exit')
+      .then((res) => {
+        sessionStorage.setItem('demo-token', null)
+        this.$router.push('/')
+      })
     },
     getJson () {
       console.log('发送请求')
@@ -176,40 +112,7 @@ export default {
 }
 </script>
 <style scoped>
-.md-list-text-container > :nth-child(2), .md-list-text-container > :nth-child(3){
-   color: rgba(255, 255, 255, 0.54);
-}
-.list-avator{
-    list-style: none;
-    margin: 0 auto;
-    padding-top: 4em;
-}
-.title{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.showItems .md-list-text-container > :nth-child(2):not(:last-child) {
-    color: rgba(0, 0, 0, 0.87);
-    font-size: 12px;
-}
 
-.md-list-text-container > :nth-child(2), .md-list-text-container > :nth-child(3){
-   color: rgba(255, 255, 255, 0.54);
-}
-.showItems .md-list-text-container > :nth-child(2), .md-list-text-container > :nth-child(3) {
-    margin: 0;
-    color: rgba(0, 0, 0, 0.54);
-    font-size: 12px;
-}
-.list-avator{
-    list-style: none;
-    margin: 0 auto;
-    padding-top: 4em;
-}
-.money{
-  font-size: 12px
-}
 </style>
 
 

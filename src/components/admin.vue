@@ -39,6 +39,10 @@
           <md-list-item>
             <router-link to="/"><md-icon>whatshot</md-icon> <span>我的收藏</span></router-link>
           </md-list-item>
+          <md-list-item @click="exit" class="md-primary">
+            <md-icon>whatshot</md-icon> <span>退出</span>
+          </md-list-item>
+          
         </md-list>
       </div>
 
@@ -77,9 +81,8 @@ export default {
   created () {
     const userInfo = this.getUserInfo() // 获取用户信息
     if (userInfo != null) {
-      console.log(userInfo)
-      this.userName = userInfo.name
-      this.user_name = userInfo.role !== 1 ? '求职者' : '招聘方'
+      this.userName = userInfo.userName
+      this.user_name = userInfo.role === '1' ? '求职者' : '招聘方'
     }
   },
   data () {
@@ -154,6 +157,14 @@ export default {
       } else {
         return null
       }
+    },
+    exit () {
+      console.log('退出')
+      this.$http.get('/api/exit')
+      .then((res) => {
+        sessionStorage.setItem('demo-token', null)
+        this.$router.push('/')
+      })
     },
     getJson () {
       console.log('发送请求')
