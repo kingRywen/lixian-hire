@@ -36,6 +36,7 @@ const verify = async function (ctx) {
     ctx.session.isRegister = true
     ctx.session.isLogin = true
     ctx.session.role = ctx.request.body.role
+    ctx.session.isEntireInfo = false
     ctx.cookies.set('role', ctx.request.body.role, {
       httpOnly: true,
       expires: new Date(new Date().getTime() + 60 * 20 * 1000)

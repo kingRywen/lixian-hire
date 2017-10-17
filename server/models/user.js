@@ -33,7 +33,8 @@ const createUser = async (ctx) => {
     user_name: ctx.request.body.account,
     password: encodePass,
     role: ctx.request.body.role,
-    userName: ctx.request.body.userName
+    userName: ctx.request.body.userName,
+    createDate: new Date().getTime()
   })
   return userInfo
 }
@@ -49,7 +50,8 @@ const createCompanyUser = async (ctx) => {
     user_name: ctx.request.body.account,
     password: encodePass,
     role: ctx.request.body.role,
-    userName: ctx.request.body.userName
+    userName: ctx.request.body.userName,
+    createDate: new Date().getTime()
   })
   return userInfo
 }
