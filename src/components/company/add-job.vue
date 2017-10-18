@@ -1,47 +1,8 @@
 <template>
   <div>
     <md-stepper ref="step" @completed="completed()">
-      <md-step :md-editable="true" md-label="完善公司信息" :md-error="!valid" :md-continue="valid" :md-message="invalidMessage" md-button-back="返回" md-button-continue="下一步">
-        <p>请完善以下信息以便发布职位</p>
-        <md-input-container :class="{'md-input-invalid': !fullNameValid}">
-          <md-input type="text" v-model="fullName" required/>
-          <label>公司全称</label>
-        </md-input-container>
-        <md-input-container :class="{'md-input-invalid': !mailValid}">
-          <md-input type="email" v-model="email" required/>
-          <label>Email</label>
-        </md-input-container>
-        <md-input-container :class="{'md-input-invalid': !locationValid}">
-          <md-input type="text" v-model="location" required/>
-          <label>地址</label>
-        </md-input-container>
-        <!-- <md-input-container :class="{'md-input-invalid': !lifeValid}">
-          <md-input type="text" v-model="life" required/>
-          <label>规模</label>
-        </md-input-container> -->
-        <md-input-container :class="{'md-input-invalid': !lifeValid}">
-          <label for="movie">规模</label>
-          <md-select name="movie" id="movie" v-model="life" required>
-            <md-option value="1-10人">1-10人</md-option>
-            <md-option value="10-50人">10-50人</md-option>
-            <md-option value="50-100人">50-100人</md-option>
-            <md-option value="100-500人">100-500人</md-option>
-            <md-option value="500-1000人">500-1000人</md-option>
-            <md-option value="1000人以上">1000人以上</md-option>
-          </md-select>
-        </md-input-container>
-        <md-input-container :class="{'md-input-invalid': !industryValid}">
-          <md-input type="text" v-model="industry" required/>
-          <label>行业</label>
-        </md-input-container>
-        <md-input-container :class="{'md-input-invalid': !introductionValid}">
-          <label>公司简介</label>
-          <md-textarea maxlength="2000" v-model="introduction" required></md-textarea>
-        </md-input-container>
-      </md-step>
 
-
-      <md-step md-label="发布职位" :md-disabled="!valid" :md-error="!validJob" :md-continue="validJob" :md-message="invalidJobMessage" md-button-back="返回">
+      <md-step md-label="发布职位" :md-error="!validJob" :md-continue="validJob" :md-message="invalidJobMessage" md-button-back="返回">
         <p>以下信息发布你的职位</p>
         <md-input-container :class="{'md-input-invalid': !nameValid}">
           <md-input type="text" v-model="name" required/>
@@ -97,20 +58,7 @@ export default {
         content: 'Your post has been deleted!',
         ok: 'Cool!'
       },
-      email: '',
-      mailValid: false,
-      invalidMessage: '',
       invalidJobMessage: '',
-      fullNameValid: false,
-      fullName: '',
-      location: '',
-      locationValid: false,
-      life: '',
-      lifeValid: false,
-      industry: '',
-      industryValid: false,
-      introduction: '',
-      introductionValid: false,
       name: '',
       nameValid: false,
       salary: '',
@@ -135,83 +83,21 @@ export default {
     completed () {
       console.log('completed')
       let self = this
-      let { fullName, email, location, life, industry, introduction, name, salary, jobLocation, experience, education, content } = this
-      this.$http.post('/auth/set-company-info', {
-        fullName, email, location, life, industry, introduction
+      let { name, salary, jobLocation, experience, education, content } = this
+      self.$http.post('/auth/post-position', {
+        name, salary, location: jobLocation, experience, education, content
       })
         .then((res) => {
           if (res.data.success) {
-            console.log('完善公司信息成功')
-            self.openDialog('dialog')
-            self.$http.post('/auth/post-position', {
-              name, salary, location: jobLocation, experience, education, content
-            })
-              .then((res) => {
-                if (res.data.success) {
-                  console.log('发布职位成功')
-                  self.$router.push('/adminhire')
-                } else {
-                  console.log('网络延时')
-                }
-              })
+            console.log('发布职位成功')
+            self.$router.push('/adminhire')
           } else {
-            self.openDialog('dialog')
+            console.log('网络延时')
           }
         })
     }
   },
   watch: {
-    email () {
-      var emailRegex = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
-
-      this.mailValid = emailRegex.test(this.email)
-      if (this.mailValid && this.valid) {
-        this.invalidMessage = ''
-      } else {
-        this.invalidMessage = '邮箱格式不正确'
-      }
-    },
-    location () {
-      this.locationValid = this.location.length > 3 && this.location.trim() !== ''
-      if (!this.locationValid) {
-        this.invalidMessage = '地址不少于4个字'
-      } else {
-        this.invalidMessage = ''
-      }
-    },
-    fullName () {
-      this.fullNameValid = this.fullName.length > 4 && this.fullName.trim() !== ''
-      if (!this.fullNameValid) {
-        this.invalidMessage = '全名不少于4个字'
-      } else {
-        this.invalidMessage = ''
-      }
-    },
-    life () {
-      this.lifeValid = this.life.trim() !== ''
-      if (!this.lifeValid) {
-        this.invalidMessage = '必须选择一个规模'
-      } else {
-        this.invalidMessage = ''
-      }
-    },
-    industry () {
-      this.industryValid = this.industry.trim() !== ''
-      if (!this.industryValid) {
-        this.invalidMessage = '请填上你的行业'
-      } else {
-        this.invalidMessage = ''
-      }
-    },
-    introduction () {
-      this.introductionValid = this.introduction.trim() !== ''
-      if (!this.introductionValid) {
-        this.invalidMessage = '公司简介'
-      } else {
-        this.invalidMessage = ''
-      }
-    },
-    // 职位发布
     name () {
       this.nameValid = this.name.length > 2 && this.name.trim() !== ''
       if (!this.nameValid) {
@@ -262,9 +148,6 @@ export default {
     }
   },
   computed: {
-    valid () {
-      return this.mailValid && this.fullNameValid && this.locationValid && this.lifeValid && this.industryValid && this.introductionValid
-    },
     validJob () {
       return this.nameValid && this.salaryValid && this.jobLocationValid && this.experienceValid && this.educationValid && this.contentValid
     }

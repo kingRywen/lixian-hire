@@ -16,10 +16,32 @@ router.beforeEach((to, from, next) => {
   const token = sessionStorage.getItem('demo-token')
   if (to.path === '/') {
     if (token != null && token !== 'null') {
-      next('/admin')
+      if (sessionStorage.getItem('role') === '2') {
+        next('/adminhire')
+      } else {
+        next('/admin')
+      }
     }
     next()
   } else if (to.path === '/info' || to.path === '/register') {
+    next()
+  } else if (to.path === '/admin') {
+    if (sessionStorage.getItem('role') === '1') {
+      next()
+      return
+    }
+    next('/')
+  } else if (to.path === '/adminhire') {
+    if (sessionStorage.getItem('role') === '2') {
+      next()
+      return
+    }
+    next('/')
+  } else if (to.path === '/adminhire/add') {
+    if (sessionStorage.getItem('isEntireInfo')) {
+      next('/adminhire/add-job')
+      return
+    }
     next()
   } else {
     if (token !== 'null' && token !== null) {

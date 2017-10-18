@@ -36,13 +36,20 @@ const LoginUser = new Schema({
       graduationYear: Number
     }
   ],
-  collectionPosition: [Schema.Types.ObjectId],
-  collectionCompany: [Schema.Types.ObjectId]
+  collectionPosition: [{
+    type: Schema.Types.ObjectId,
+    ref: 'JobInfo'
+  }],
+  collectionCompany: [{
+    type: Schema.Types.ObjectId,
+    ref: 'CompanyUser'
+  }]
 })
 
 // 招聘方信息表
 const CompanyUser = new Schema({
-  createDate: String,
+  createDate: Date,
+  updateDate: Date,
   user_name: { // 登录名
     type: String,
     required: true,
@@ -64,16 +71,18 @@ const CompanyUser = new Schema({
     type: Boolean,
     default: false
   },
-  companyInfo: [
-    {
-      fullName: String,
-      email: String,
-      location: String,
-      life: String,
-      industry: Number
-    }
-  ],
-  collectionPosition: [Schema.Types.ObjectId],
+  companyInfo: {
+    fullName: String,
+    email: String,
+    location: String,
+    life: String,
+    industry: String,
+    introduction: String
+  },
+  collectionPosition: [{
+    type: Schema.Types.ObjectId,
+    ref: 'JobInfo'
+  }],
   collectionSeekers: [Schema.Types.ObjectId]
 })
 
@@ -85,8 +94,13 @@ const JobInfo = new Schema({
   location: String,
   experience: String,
   education: String,
-  release: Schema.Types.ObjectId,
-  content: String
+  companyID: String,
+  companyName: String,
+  content: String,
+  status: {
+    type: Number,
+    default: 1
+  }
 })
 
 module.exports = {

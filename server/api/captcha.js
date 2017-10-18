@@ -33,6 +33,8 @@ const verify = async function (ctx) {
     const token = jwt.sign(userToken, secret)
 
     // 设置session和cookie
+    ctx.session._id = createInfo.id
+    ctx.session.fullName = createInfo.fullName
     ctx.session.isRegister = true
     ctx.session.isLogin = true
     ctx.session.role = ctx.request.body.role
@@ -45,7 +47,9 @@ const verify = async function (ctx) {
       success: true,
       info: '注册成功',
       token: token,
-      role: ctx.request.body.role
+      role: ctx.request.body.role,
+      isEntireInfo: ctx.session.isRegister,
+      fullName: createInfo.fullName
     }
   }
 }

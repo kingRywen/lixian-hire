@@ -163,6 +163,7 @@ export default {
       this.$http.get('/api/exit')
       .then((res) => {
         sessionStorage.setItem('demo-token', null)
+        sessionStorage.setItem('role', null)
         this.$router.push('/')
       })
     },
