@@ -12,16 +12,16 @@
       <md-card-area>
         <md-list-item style="padding:24px 0">
           <div class="md-list-text-container">
-            <span style="font-size:20px;line-height:24px">芯片模拟电路设计工程师</span>
-            <span><b class="color">50万-100万</b> | 
-              <md-icon style="font-size:16px;min-width:16px;width:16px">alarm</md-icon> 发布时间：2017-09-22</span>
+            <span style="font-size:20px;line-height:24px">{{ details.name }}</span>
+            <span><b class="color">{{ details.salary }}</b> | 
+              <md-icon style="font-size:16px;min-width:16px;width:16px">alarm</md-icon> 发布时间：{{ time }}</span>
             <p class="details">
               <span>
-                <md-icon>place</md-icon>南京</span> |
+                <md-icon>place</md-icon>{{ details.location }}</span> |
               <span>
-                <md-icon>av_timer</md-icon>应届生|在校生</span> |
+                <md-icon>av_timer</md-icon>{{ details.experience }}</span> |
               <span>
-                <md-icon>face</md-icon>本科及以上</span>
+                <md-icon>face</md-icon>{{ details.education }}</span>
             </p>
           </div>
 
@@ -41,7 +41,7 @@
           </md-avatar>
 
           <div class="md-list-text-container">
-            <span>应用材料（中国）有限公司</span>
+            <span>{{ details.companyName }}</span>
             <span style="color:#666">半导体设备与零件 | 规模：500-1000人</span>
             <p class="details">
               <span class="color">
@@ -57,27 +57,7 @@
       </md-card-area>
 
       <md-card-content>
-        <p>主要职责：<br> 1、为客户提供技术支持及服务，包括新机台安装，设备维护，数据分析，故障处理等
-          <br> 2、公司内部技术支持，装机基础分析
-          <br> 3、为内外部客户提供技术培训
-          <br> 4、承担公司安排的其它工作
-          <br>
-          <br> 岗位要求：
-          <br> 1、本科学历，自动化/机电一体化/电子工程/电气工程及其自动化/机械制造及其自动化/精密仪器/光学等相关专业
-          <br> 2、有效的沟通和人际交往能力
-          <br> 3、较强的责任心与团队合作精神，快速学习的能力以及承受富有挑战性工作的能力
-          <br> 4、良好的英语听说读写能力
-          <br> 2、公司内部技术支持，装机基础分析
-          <br> 3、为内外部客户提供技术培训
-          <br> 4、承担公司安排的其它工作
-          <br>
-          <br> 岗位要求：
-          <br> 1、本科学历，自动化/机电一体化/电子工程/电气工程及其自动化/机械制造及其自动化/精密仪器/光学等相关专业
-          <br> 2、有效的沟通和人际交往能力
-          <br> 3、较强的责任心与团队合作精神，快速学习的能力以及承受富有挑战性工作的能力
-          <br> 4、良好的英语听说读写能力
-        </p>
-
+        {{ details.content }}
       </md-card-content>
     </md-card>
     <div class="btn-wrapper">
@@ -90,14 +70,54 @@
 </template>
 <script>
 export default {
+  mounted () {
+    this.getData()
+  },
   data () {
     return {
-      star: false
+      star: false,
+      details: '',
+      companyDetails: ''
+    }
+  },
+  computed: {
+    time () {
+      if (!this.details.createDate) return
+      let ms = new Date(JSON.parse(this.details.createDate))
+      let year = ms.getFullYear()
+      let mouth = ms.getMonth() + 1
+      let day = ms.getDate()
+      return `${year}-${mouth}-${day}`
     }
   },
   methods: {
     back () {
       this.$router.go(-1)
+    },
+    getData () {
+      let self = this
+      console.log(self.$route.params.id)
+      this.$http.get('/api/job-details', {
+        params: {
+          code: self.$route.params.id
+        }
+      })
+        .then((res) => {
+          console.log(res.data)
+          self.details = res.data
+          self.getCompany(res.data.companyID)
+        })
+    },
+    getCompany (id) {
+      this.$http.get('/companyInfo', {
+        params: {
+          code: id
+        }
+      })
+        .then((res) => {
+          console.log(res.data)
+          self.companyDetails = res.data
+        })
     }
   }
 }

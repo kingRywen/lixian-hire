@@ -57,9 +57,9 @@ export default {
       this.$http.post('/auth/user', obj)
         .then((res) => {
           if (res.data.success) { // 如果成功登陆
-            sessionStorage.setItem('demo-token', res.data.token) // 用sessionstorage存下token
-            sessionStorage.setItem('role', res.data.role)
-            sessionStorage.setItem('isEntireInfo', res.data.isEntireInfo)
+            localStorage.setItem('demo-token', res.data.token) // 用localStorage存下token
+            localStorage.setItem('role', res.data.role)
+            localStorage.setItem('isEntireInfo', res.data.isEntireInfo)
             if (res.data.role === '1') {
               this.$router.push('/admin')
             } else {
@@ -72,11 +72,11 @@ export default {
             this.msg = res.data.info
             console.log(this.$refs.snackbar)
             this.$refs.snackbar.open()
-            sessionStorage.setItem('demo-token', null)
+            localStorage.clear()
           }
         }, (err) => {
           this.msg = '请求错误:' + err.message
-          sessionStorage.setItem('demo-token', null)
+          localStorage.clear()
         })
       // this.$router.push('/admin')
     }

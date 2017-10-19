@@ -7,16 +7,17 @@ import axios from 'axios'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.css'
 import store from './store'
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 
 Vue.config.productionTip = false
 Vue.config.debug = true
 
 // 登录路由拦截
 router.beforeEach((to, from, next) => {
-  const token = sessionStorage.getItem('demo-token')
+  const token = localStorage.getItem('demo-token')
   if (to.path === '/') {
     if (token != null && token !== 'null') {
-      if (sessionStorage.getItem('role') === '2') {
+      if (localStorage.getItem('role') === '2') {
         next('/adminhire')
       } else {
         next('/admin')
@@ -26,19 +27,19 @@ router.beforeEach((to, from, next) => {
   } else if (to.path === '/info' || to.path === '/register') {
     next()
   } else if (to.path === '/admin') {
-    if (sessionStorage.getItem('role') === '1') {
+    if (localStorage.getItem('role') === '1') {
       next()
       return
     }
     next('/')
   } else if (to.path === '/adminhire') {
-    if (sessionStorage.getItem('role') === '2') {
+    if (localStorage.getItem('role') === '2') {
       next()
       return
     }
     next('/')
   } else if (to.path === '/adminhire/add') {
-    if (sessionStorage.getItem('isEntireInfo')) {
+    if (localStorage.getItem('isEntireInfo') !== 'false') {
       next('/adminhire/add-job')
       return
     }
@@ -54,7 +55,7 @@ router.beforeEach((to, from, next) => {
 
 // axios 全局配置拦截器，request 拦截器
 axios.interceptors.request.use(config => {
-  const token = sessionStorage.getItem('demo-token')
+  const token = localStorage.getItem('demo-token')
   if (token != null && token !== 'null') { // 判断是否存在token，如果存在的话，则每个http header都加上token
     config.headers.Authorization = `token ${token}`
   }
@@ -89,5 +90,5 @@ new Vue({
   router,
   store,
   template: '<App/>',
-  components: { App }
+  components: { App, PulseLoader }
 })

@@ -48,22 +48,22 @@
 
       </md-sidenav>
   </div>
-
+  <clip-loader></clip-loader>
 
   <md-list class="custom-list md-triple-line showItems">
     <md-subheader>热门职位</md-subheader>
       <md-list-item v-for="(item,index) in items" :key="index">
-        <router-link :to="'/job-detail/' + item.id">
+        <router-link :to="'/job-detail/' + item._id">
           <md-avatar>
-            <img :src="item.companyLogoUrl" alt="People">
+            <img src="https://placeimg.com/40/40/people/1" alt="People">
           </md-avatar>
 
           <div class="md-list-text-container">
-            <span>{{ item.job }}</span>
+            <span>{{ item.name }}</span>
             <span>{{ item.companyName }}</span>
-            <p>{{ item.tags.join('|') }}</p>
+            <p>{{ `${item.location} | ${item.education} | ${item.experience}` }}</p>
           </div>
-          <div class="money">{{ item.money }}</div>
+          <div class="money">{{ item.salary }}</div>
           <!-- <md-button class="md-icon-button md-list-action">
             
           </md-button> -->
@@ -78,6 +78,9 @@
 import jwt from 'jsonwebtoken'
 
 export default {
+  mounted () {
+    this.getData()
+  },
   created () {
     const userInfo = this.getUserInfo() // 获取用户信息
     if (userInfo != null) {
@@ -90,60 +93,12 @@ export default {
       userName: '',
       user_name: '',
       info: '',
-      /* items: [] */
-      items: [{
-        id: 123,
-        companyLogoUrl: 'https://placeimg.com/40/40/people/1',
-        companyName: '应用材料（中国）有限公司',
-        job: '芯片模拟电路设计工程师',
-        tags: ['上海', '应届生', '在校生', '本科及以上', '全职'],
-        money: '50万-100万'
-      },
-      {
-        id: 123,
-        companyLogoUrl: 'https://placeimg.com/40/40/people/1',
-        companyName: '应用材料（中国）有限公司',
-        job: '芯片模拟电路设计工程师',
-        tags: ['上海', '应届生', '在校生', '本科及以上', '全职'],
-        money: '50万-100万'
-      },
-      {
-        id: 123,
-        companyLogoUrl: 'https://placeimg.com/40/40/people/1',
-        companyName: '应用材料（中国）有限公司',
-        job: '芯片模拟电路设计工程师',
-        tags: ['上海', '应届生', '在校生', '本科及以上', '全职'],
-        money: '50万-100万'
-      },
-      {
-        id: 123,
-        companyLogoUrl: 'https://placeimg.com/40/40/people/1',
-        companyName: '应用材料（中国）有限公司',
-        job: '芯片模拟电路设计工程师',
-        tags: ['上海', '应届生', '在校生', '本科及以上', '全职'],
-        money: '50万-100万'
-      },
-      {
-        id: 123,
-        companyLogoUrl: 'https://placeimg.com/40/40/people/1',
-        companyName: '应用材料（中国）有限公司',
-        job: '芯片模拟电路设计工程师',
-        tags: ['上海', '应届生', '在校生', '本科及以上', '全职'],
-        money: '50万-100万'
-      },
-      {
-        id: 123,
-        companyLogoUrl: 'https://placeimg.com/40/40/people/1',
-        companyName: '应用材料（中国）有限公司',
-        job: '芯片模拟电路设计工程师',
-        tags: ['上海', '应届生', '在校生', '本科及以上', '全职'],
-        money: '50万-100万'
-      }]
+      items: []
     }
   },
   methods: {
     getUserInfo () {
-      const token = sessionStorage.getItem('demo-token')
+      const token = localStorage.getItem('demo-token')
       if (token != null && token !== 'null') {
         let decode
         try {
@@ -162,21 +117,17 @@ export default {
       console.log('退出')
       this.$http.get('/api/exit')
       .then((res) => {
-        sessionStorage.setItem('demo-token', null)
-        sessionStorage.setItem('role', null)
+        localStorage.clear()
         this.$router.push('/')
       })
     },
-    getJson () {
+    getData () {
+      let self = this
       console.log('发送请求')
-      this.$http.get('/auth/user')
+      this.$http.get('/api/jobs')
       .then((res) => {
-        console.log(res)
-        if (res.data) {
-          this.info = res.data.user_name
-        } else {
-          this.info = '错误： ' + res.data
-        }
+        console.log(res.data)
+        self.items = res.data
       }, err => {
         throw (err)
       })

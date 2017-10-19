@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     getUserInfo () {
-      const token = sessionStorage.getItem('demo-token')
+      const token = localStorage.getItem('demo-token')
       if (token != null && token !== 'null') {
         let decode
         try {
@@ -87,8 +87,7 @@ export default {
       console.log('退出')
       this.$http.get('/api/exit')
       .then((res) => {
-        sessionStorage.setItem('demo-token', null)
-        sessionStorage.setItem('role', null)
+        localStorage.clear()
         this.$router.push('/')
       })
     },

@@ -38,7 +38,6 @@ const PostUserAuth = async (ctx) => {
       }
       const secret = 'jiang'
       ctx.session._id = userInfo._id
-      ctx.session.fullName = userInfo.companyInfo.fullName
       ctx.session.isRegister = true
       ctx.session.isLogin = true
       ctx.session.role = userInfo.role
@@ -52,8 +51,7 @@ const PostUserAuth = async (ctx) => {
         success: true,
         token: token,
         role: userInfo.role,
-        isEntireInfo: userInfo.isEntireInfo,
-        fullName: userInfo.fullName
+        isEntireInfo: userInfo.isEntireInfo
       }
     }
   } else {

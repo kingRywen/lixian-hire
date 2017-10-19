@@ -48,7 +48,7 @@ const verify = async function (ctx) {
       info: '注册成功',
       token: token,
       role: ctx.request.body.role,
-      isEntireInfo: ctx.session.isRegister,
+      isEntireInfo: ctx.session.isEntireInfo,
       fullName: createInfo.fullName
     }
   }

@@ -153,7 +153,7 @@ export default {
   },
   methods: {
     getUserInfo () {
-      const token = sessionStorage.getItem('demo-token')
+      const token = localStorage.getItem('demo-token')
       if (token != null && token !== 'null') {
         let decode = jwt.verify(token, 'jiang')
         return decode

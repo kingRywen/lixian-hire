@@ -199,9 +199,9 @@ export default {
           } else {
             this.msg = res.data.info
             this.$refs.snackbar.open()
-            sessionStorage.setItem('demo-token', res.data.token)
-            sessionStorage.setItem('role', res.data.role)
-            sessionStorage.setItem('isEntireInfo', res.data.isEntireInfo)
+            localStorage.setItem('demo-token', res.data.token)
+            localStorage.setItem('role', res.data.role)
+            localStorage.setItem('isEntireInfo', res.data.isEntireInfo)
             if (Number(res.data.role) === 1) {
               this.$router.push('/admin')
             } else {
@@ -211,7 +211,7 @@ export default {
         }, (err) => {
           this.msg = '请求错误:' + err.message
           this.$refs.snackbar.open()
-          sessionStorage.setItem('demo-token', null)
+          localStorage.clear()
         })
     },
     reloadCaptcha () {

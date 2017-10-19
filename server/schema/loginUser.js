@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 // 求职方信息表
 const LoginUser = new Schema({
-  createDate: String,
+  createDate: Date,
   user_name: { // 登录名
     type: String,
     required: true,
@@ -70,6 +70,10 @@ const CompanyUser = new Schema({
   isEntireInfo: {
     type: Boolean,
     default: false
+  },
+  count: {
+    type: Number,
+    default: 0
   },
   companyInfo: {
     fullName: String,

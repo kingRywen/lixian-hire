@@ -11,7 +11,7 @@ export default new Vuex.Store({
   mutations: {
     logOut () {
       console.log('退出登录')
-      sessionStorage.setItem('demo-token', null)
+      localStorage.clear()
       router.replace({
         path: '/'
       })

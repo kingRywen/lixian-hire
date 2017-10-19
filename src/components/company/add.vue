@@ -149,6 +149,7 @@ export default {
               .then((res) => {
                 if (res.data.success) {
                   console.log('发布职位成功')
+                  localStorage.setItem('isEntireInfo', 0)
                   self.$router.push('/adminhire')
                 } else {
                   console.log('网络延时')
@@ -245,7 +246,7 @@ export default {
       }
     },
     education () {
-      this.educationValid = this.education.length > 2 && this.education.trim() !== ''
+      this.educationValid = this.education.trim() !== ''
       if (!this.educationValid) {
         this.invalidJobMessage = '必须选择文凭要求'
       } else {

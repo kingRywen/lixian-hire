@@ -18,13 +18,6 @@ const getUserById = async (ctx, id) => {
   console.log(userInfo)
   return userInfo
 }
-// 通过id查询操作
-const getCompanyById = async (ctx) => {
-  let id = ctx.session._id
-  let userInfo = await CompanyUserModel.findById(id)
-  console.log(userInfo)
-  return userInfo
-}
 
 // 通过用户名查找用户信息
 const getUserByName = async (ctx, name) => {
@@ -41,7 +34,7 @@ const createUser = async (ctx) => {
     password: encodePass,
     role: ctx.request.body.role,
     userName: ctx.request.body.userName,
-    createDate: new Date().getTime()
+    createDate: Date.now()
   })
   return userInfo
 }
@@ -49,6 +42,14 @@ const createUser = async (ctx) => {
 /**
  * 招聘方读写操作
  */
+
+// 通过id查询操作
+const getCompanyById = async (ctx) => {
+  let id = ctx.session._id
+  let userInfo = await CompanyUserModel.findById(id)
+  console.log(userInfo)
+  return userInfo
+}
 
 // 创建用户
 const createCompanyUser = async (ctx) => {
@@ -58,7 +59,7 @@ const createCompanyUser = async (ctx) => {
     password: encodePass,
     role: ctx.request.body.role,
     userName: ctx.request.body.userName,
-    createDate: Date.now
+    createDate: Date.now()
   })
   return userInfo
 }
@@ -119,10 +120,28 @@ const postPosition = async (ctx) => {
     await CompanyUserModel.update({_id: _id}, {
       $push: { 'collectionPosition': updateInfo.id }
     })
+    await CompanyUserModel.update({_id: _id}, {
+      $inc: { 'count': 1 }
+    })
     return updateInfo
   } else {
     return false
   }
+}
+
+// 求职者获取所有职位列表
+const userGetAllList = async (ctx) => {
+  return await JobInfoModel.find({}, '_id companyID companyName location education salary name experience')
+}
+
+// 求职者获取一个指定ID的职位信息
+const userGetOneJob = async (ctx) => {
+  return await JobInfoModel.findById(ctx.request.query.code)
+}
+
+// 求职者获取一个指定ID的职位信息
+const userGetCompanyInfo = async (ctx) => {
+  return await CompanyUserModel.find({_id: ctx.request.query.code}, 'companyInfo count')
 }
 
 module.exports = {
@@ -131,5 +150,8 @@ module.exports = {
   createCompanyUser,
   createUser,
   editCompany,
-  postPosition
+  postPosition,
+  userGetAllList,
+  userGetOneJob,
+  userGetCompanyInfo
 }
