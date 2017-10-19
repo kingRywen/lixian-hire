@@ -28,16 +28,16 @@
           </md-list-item>
         </div>
       </md-toolbar>
-      <div class="phone-viewport">
+      <div class="phone-viewport" @click="toggleLeftSidenav">
         <md-list>
           <md-list-item>
-            <router-link to="/"><md-icon>whatshot</md-icon> <span>我的简历</span></router-link>
+            <router-link to="/resume"><md-icon>whatshot</md-icon> <span>我的简历</span></router-link>
           </md-list-item>
           <md-list-item>
-            <router-link to="/"><md-icon>whatshot</md-icon> <span>投递状态</span></router-link>
+            <router-link to="/state"><md-icon>whatshot</md-icon> <span>投递状态</span></router-link>
           </md-list-item>
           <md-list-item>
-            <router-link to="/"><md-icon>whatshot</md-icon> <span>我的收藏</span></router-link>
+            <router-link to="/mark"><md-icon>whatshot</md-icon> <span>我的收藏</span></router-link>
           </md-list-item>
           <md-list-item @click="exit" class="md-primary">
             <md-icon>whatshot</md-icon> <span>退出</span>
@@ -48,38 +48,13 @@
 
       </md-sidenav>
   </div>
-
-  <md-list class="custom-list md-triple-line showItems">
-    <md-subheader>热门职位</md-subheader>
-      <md-list-item v-for="(item,index) in items" :key="index">
-        <router-link :to="'/job-detail/' + item._id">
-          <md-avatar>
-            <img src="https://placeimg.com/40/40/people/1" alt="People">
-          </md-avatar>
-
-          <div class="md-list-text-container">
-            <span>{{ item.name }}</span>
-            <span>{{ item.companyName }}</span>
-            <p>{{ `${item.location} | ${item.education} | ${item.experience}` }}</p>
-          </div>
-          <div class="money">{{ item.salary }}</div>
-          <!-- <md-button class="md-icon-button md-list-action">
-            
-          </md-button> -->
-        </router-link>
-
-        <md-divider class="md-inset"></md-divider>
-      </md-list-item>
-    </md-list>
+  <router-view></router-view>
+  
 </div>
 </template>
 <script>
 import jwt from 'jsonwebtoken'
-
 export default {
-  mounted () {
-    this.getData()
-  },
   created () {
     const userInfo = this.getUserInfo() // 获取用户信息
     if (userInfo != null) {
@@ -90,9 +65,7 @@ export default {
   data () {
     return {
       userName: '',
-      user_name: '',
-      info: '',
-      items: []
+      user_name: ''
     }
   },
   methods: {
@@ -118,17 +91,6 @@ export default {
       .then((res) => {
         localStorage.clear()
         this.$router.push('/')
-      })
-    },
-    getData () {
-      let self = this
-      console.log('发送请求')
-      this.$http.get('/api/jobs')
-      .then((res) => {
-        console.log(res.data)
-        self.items = res.data
-      }, err => {
-        throw (err)
       })
     },
     toggleLeftSidenav () {

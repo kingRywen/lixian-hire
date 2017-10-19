@@ -44,13 +44,37 @@ const getUserMarkJob = async (ctx) => {
   return await LoginUserModel.findById(ctx.session._id, 'collectionPosition')
 }
 
+// 获取求职者收藏的公司
+const getUserMarkCompany = async (ctx) => {
+  return await LoginUserModel.findById(ctx.session._id, 'collectionCompany')
+}
+
 // 发送简历后保存职位ID
 const saveJobID = async (ctx) => {
+  const result = await LoginUserModel.findById(ctx.session._id, 'sendPosition')
+  if (result.sendPosition.indexOf(ctx.query.code) !== -1) {
+    return false
+  }
   return await LoginUserModel.update({_id: ctx.session._id}, {
     $push: {
       'sendPosition': ctx.query.code
     }
   })
+}
+
+// 保存求职者的简历
+const updateResume = async (ctx) => {
+  let id = ctx.session._id
+  let body = ctx.request.body
+  try {
+    return await LoginUserModel.update({ _id: id }, {
+      $push: {
+        'resume': body
+      }
+    })
+  } catch (e) {
+    return false
+  }
 }
 
 /**
@@ -190,8 +214,35 @@ const userMarkJob = async (ctx) => {
   return 1
 }
 
-// 保存发送简历的求职者的id
+// 收藏公司
+const userMarkCompany = async (ctx) => {
+  // 要收藏的公司的id
+  const _id = ctx.request.query.code
+  // 个人求职者的id
+  const id = ctx.session._id
+  const result1 = await LoginUserModel.update({ _id: id }, {
+    $addToSet: {
+      'collectionCompany': _id
+    }
+  })
+  if (!result1.nModified) {
+    await LoginUserModel.update({ _id: id }, {
+      $pull: {
+        'collectionCompany': _id
+      }
+    })
+    return 0
+  }
+  return 1
+}
+
+// 保存发送简历的求职者
 const saveUserID = async (ctx) => {
+  // 检测是否存在
+  let result = await JobInfoModel.findById(ctx.query.code, 'subscribUserID')
+  if (result.subscribUserID.indexOf(ctx.session._id) !== -1) {
+    return false
+  }
   return await JobInfoModel.update({_id: ctx.query.code}, {
     $push: {
       'subscribUserID': ctx.session._id
@@ -213,5 +264,8 @@ module.exports = {
   getUserMarkJob,
   getCompanyAllJobById,
   saveUserID,
-  saveJobID
+  saveJobID,
+  userMarkCompany,
+  getUserMarkCompany,
+  updateResume
 }

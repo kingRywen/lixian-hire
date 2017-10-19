@@ -32,8 +32,7 @@ const LoginUser = new Schema({
       email: String,
       city: String,
       education: String,
-      workingLife: String,
-      graduationYear: Number
+      workingLife: String
     }
   ],
   collectionPosition: [String],

@@ -17,6 +17,7 @@ module.exports = function () {
   apiRouter.get('/job-details', apiJob.getJobDetail)
   apiRouter.get('/companyInfo', apiJob.getCompanyInfo)
   apiRouter.get('/mark-job', apiJob.markJob)
+  apiRouter.get('/mark-company', apiJob.markCompany)
   // 公司的api
   // 获取公司发布的所有职位
   apiRouter.get('/all-company-job', apiCompany.companyAllJob)

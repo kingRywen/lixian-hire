@@ -10,6 +10,10 @@ import adminhire from '@/components/admin-hire'
 import myJobs from '@/components/company/myJobs'
 import companyAdd from '@/components/company/add'
 import companyAddJob from '@/components/company/add-job'
+import userIndex from '@/components/user/index'
+import resume from '@/components/user/resume'
+import state from '@/components/user/state'
+import mark from '@/components/user/mark'
 
 Vue.use(Router)
 
@@ -24,8 +28,13 @@ export default new Router({
     },
     {
       path: '/admin',
-      name: 'admin',
-      component: admin
+      component: admin,
+      children: [
+        {path: '', component: userIndex},
+        {path: '/resume', component: resume},
+        {path: '/state', component: state},
+        {path: '/mark', component: mark}
+      ]
     },
     {
       path: '/info',

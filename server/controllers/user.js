@@ -122,9 +122,49 @@ const postPosition = async (ctx) => {
   try {
     const userInfo = await user.postPosition(ctx)
     if (userInfo) {
+      ctx.session.isEntireInfo = true
       ctx.body = {
         success: true,
         info: '发布职位信息成功'
+      }
+    } else {
+      ctx.body = {
+        success: false,
+        info: '登录超时，重新登录'
+      }
+    }
+  } catch (e) {
+    ctx.body = {
+      success: false,
+      info: '数据库操作失败，请稍后再试'
+    }
+  }
+}
+
+// 完善简历
+const postResume = async (ctx) => {
+  // 如果session没有正确信息
+  if (ctx.session.isRegister && ctx.session.isLogin && ctx.session.role !== '1') {
+    ctx.body = {
+      success: false,
+      info: '用户没有权限'
+    }
+  }
+  if (!ctx.session.isEntireInfo) {
+    ctx.body = {
+      success: false,
+      redirect: true,
+      info: '完善简历'
+    }
+  }
+  // session正确
+  try {
+    const userInfo = await user.updateResume(ctx)
+    if (userInfo) {
+      ctx.session.isEntireInfo = true
+      ctx.body = {
+        success: true,
+        info: '更新简历成功'
       }
     } else {
       ctx.body = {
@@ -144,5 +184,6 @@ module.exports = {
   getUserInfo,
   PostUserAuth,
   setCompanyInfo,
-  postPosition
+  postPosition,
+  postResume
 }

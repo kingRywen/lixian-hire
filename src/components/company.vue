@@ -24,7 +24,7 @@
             </p>
           </div>
 
-          <md-button class="md-icon-button md-list-action" @click="star = !star">
+          <md-button class="md-icon-button md-list-action" @click="mark">
             <md-icon :class="{'md-primary': star}">star</md-icon>
           </md-button>
         </md-list-item>
@@ -88,6 +88,17 @@ export default {
     }
   },
   methods: {
+    mark () {
+      this.$http.get('/api/mark-company', {
+        params: {
+          code: this.$route.params.id
+        }
+      })
+      .then((res) => {
+        console.log(res.data)
+        this.star = !!res.data
+      })
+    },
     back () {
       this.$router.go(-1)
     },
@@ -100,8 +111,9 @@ export default {
       })
         .then((res) => {
           console.log(res)
-          this.companyInfo = res.data[0].companyInfo
-          this.count = res.data[0].count
+          this.companyInfo = res.data.data[0].companyInfo
+          this.count = res.data.data[0].count
+          this.star = res.data.mark
         })
 
       this.$http.get('/api/all-company-job', {

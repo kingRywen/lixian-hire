@@ -25,8 +25,16 @@ const getJobDetail = async (ctx) => {
 
 // getCompanyInfo
 const getCompanyInfo = async (ctx) => {
+  let mark = false
   let data = await user.userGetCompanyInfo(ctx.query.code)
-  ctx.body = data
+  let company = await user.getUserMarkCompany(ctx)
+  if (company.collectionCompany.indexOf(ctx.query.code) !== -1) {
+    mark = true
+  }
+  ctx.body = {
+    data,
+    mark
+  }
 }
 
 // 收藏职位
@@ -41,9 +49,22 @@ const markJob = async (ctx) => {
   }
 }
 
+// 收藏公司
+const markCompany = async (ctx) => {
+  if (!ctx.session._id) {
+    ctx.body = {
+      redirect: true
+    }
+  } else {
+    let data = await user.userMarkCompany(ctx)
+    ctx.body = data
+  }
+}
+
 module.exports = {
   getAllJobs,
   getJobDetail,
   getCompanyInfo,
-  markJob
+  markJob,
+  markCompany
 }

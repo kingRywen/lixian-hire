@@ -14,6 +14,9 @@ Vue.config.debug = true
 // 登录路由拦截
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('demo-token')
+  if (to.path === '/admin/resume') {
+    next()
+  }
   if (to.path === '/') {
     if (token != null && token !== 'null') {
       if (localStorage.getItem('role') === '2') {

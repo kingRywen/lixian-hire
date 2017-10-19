@@ -64,7 +64,13 @@
       <md-button @click="getJob" class="md-raised md-primary">
         <md-icon>home</md-icon> 申请职位</md-button>
     </div>
-
+    <md-dialog-alert
+      :md-content="alert.content"
+      :md-ok-text="alert.ok"
+      @open="onOpen"
+      @close="onClose"
+      ref="dialog">
+    </md-dialog-alert>
   </div>
 
 </template>
@@ -78,7 +84,11 @@ export default {
       star: false,
       details: '',
       count: '',
-      companyInfo: ''
+      companyInfo: '',
+      alert: {
+        content: '您已申请过职位，请不要重复申请',
+        ok: '确认'
+      }
     }
   },
   computed: {
@@ -92,6 +102,18 @@ export default {
     }
   },
   methods: {
+    openDialog (ref) {
+      this.$refs[ref].open()
+    },
+    closeDialog (ref) {
+      this.$refs[ref].close()
+    },
+    onOpen () {
+      console.log('Opened')
+    },
+    onClose (type) {
+      console.log('Closed', type)
+    },
     getJob () {
       console.log('申请职位')
       this.$http.get('/api/get-job', {
@@ -101,6 +123,9 @@ export default {
       })
         .then((res) => {
           console.log(res.data)
+          if (!res.data.success) {
+            this.openDialog('dialog')
+          }
         })
     },
     mark () {
