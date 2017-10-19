@@ -36,14 +36,9 @@ const LoginUser = new Schema({
       graduationYear: Number
     }
   ],
-  collectionPosition: [{
-    type: Schema.Types.ObjectId,
-    ref: 'JobInfo'
-  }],
-  collectionCompany: [{
-    type: Schema.Types.ObjectId,
-    ref: 'CompanyUser'
-  }]
+  collectionPosition: [String],
+  collectionCompany: [String],
+  sendPosition: [String]
 })
 
 // 招聘方信息表
@@ -83,11 +78,8 @@ const CompanyUser = new Schema({
     industry: String,
     introduction: String
   },
-  collectionPosition: [{
-    type: Schema.Types.ObjectId,
-    ref: 'JobInfo'
-  }],
-  collectionSeekers: [Schema.Types.ObjectId]
+  collectionPosition: [String],
+  collectionSeekers: [String]
 })
 
 // 发布职位的信息表
@@ -101,6 +93,8 @@ const JobInfo = new Schema({
   companyID: String,
   companyName: String,
   content: String,
+  markUserID: [String],
+  subscribUserID: [String],
   status: {
     type: Number,
     default: 1

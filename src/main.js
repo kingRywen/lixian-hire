@@ -7,7 +7,6 @@ import axios from 'axios'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.css'
 import store from './store'
-import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 
 Vue.config.productionTip = false
 Vue.config.debug = true
@@ -90,5 +89,5 @@ new Vue({
   router,
   store,
   template: '<App/>',
-  components: { App, PulseLoader }
+  components: { App }
 })

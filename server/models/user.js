@@ -39,6 +39,20 @@ const createUser = async (ctx) => {
   return userInfo
 }
 
+// 获取求职者收藏的职位
+const getUserMarkJob = async (ctx) => {
+  return await LoginUserModel.findById(ctx.session._id, 'collectionPosition')
+}
+
+// 发送简历后保存职位ID
+const saveJobID = async (ctx) => {
+  return await LoginUserModel.update({_id: ctx.session._id}, {
+    $push: {
+      'sendPosition': ctx.query.code
+    }
+  })
+}
+
 /**
  * 招聘方读写操作
  */
@@ -89,10 +103,10 @@ const editCompany = async (ctx) => {
   }
 }
 
-/* // 添加职位引用
-const getPosition = async (ctx) => {
-  CompanyUserModel.save()
-} */
+// 查找公司所有发布的职位的列表项
+const getCompanyAllJobById = async (ctx) => {
+  return await JobInfoModel.find({ 'companyID': ctx.query.code }, 'name salary location education experience companyName companyID')
+}
 
 /**
  * 职位类读写信息
@@ -139,9 +153,50 @@ const userGetOneJob = async (ctx) => {
   return await JobInfoModel.findById(ctx.request.query.code)
 }
 
-// 求职者获取一个指定ID的职位信息
-const userGetCompanyInfo = async (ctx) => {
-  return await CompanyUserModel.find({_id: ctx.request.query.code}, 'companyInfo count')
+// 求职者获取一个指定ID的公司信息
+const userGetCompanyInfo = async (id) => {
+  return await CompanyUserModel.find({_id: id}, 'companyInfo count')
+}
+
+// 收藏职位
+const userMarkJob = async (ctx) => {
+  // 要收藏的职位的id
+  const _id = ctx.request.query.code
+  // 个人求职者的id
+  const id = ctx.session._id
+  const result1 = await LoginUserModel.update({ _id: id }, {
+    $addToSet: {
+      'collectionPosition': _id
+    }
+  })
+  const result2 = await JobInfoModel.update({ _id: _id }, {
+    $addToSet: {
+      'markUserID': id
+    }
+  })
+  if (!result1.nModified && !result2.nModified) {
+    await LoginUserModel.update({ _id: id }, {
+      $pull: {
+        'collectionPosition': _id
+      }
+    })
+    await JobInfoModel.update({ _id: _id }, {
+      $pull: {
+        'markUserID': id
+      }
+    })
+    return 0
+  }
+  return 1
+}
+
+// 保存发送简历的求职者的id
+const saveUserID = async (ctx) => {
+  return await JobInfoModel.update({_id: ctx.query.code}, {
+    $push: {
+      'subscribUserID': ctx.session._id
+    }
+  })
 }
 
 module.exports = {
@@ -153,5 +208,10 @@ module.exports = {
   postPosition,
   userGetAllList,
   userGetOneJob,
-  userGetCompanyInfo
+  userGetCompanyInfo,
+  userMarkJob,
+  getUserMarkJob,
+  getCompanyAllJobById,
+  saveUserID,
+  saveJobID
 }

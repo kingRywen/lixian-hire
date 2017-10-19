@@ -75,7 +75,7 @@ export default {
           decode = jwt.verify(token, 'jiang')
           console.log(decode)
         } catch (error) {
-          alert('登录未知错误')
+          alert('登录超时，请重新登录')
           this.$router.push('/')
         }
         return decode

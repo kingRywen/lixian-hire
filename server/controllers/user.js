@@ -32,6 +32,7 @@ const PostUserAuth = async (ctx) => {
       }
     } else {
       const userToken = {
+        exp: Math.floor(Date.now() / 1000) + (10 * 60),
         name: userInfo.user_name,
         id: userInfo._id,
         role: userInfo.role

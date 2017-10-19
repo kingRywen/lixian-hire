@@ -25,7 +25,7 @@
             </p>
           </div>
 
-          <md-button class="md-icon-button md-list-action" @click="star = !star">
+          <md-button class="md-icon-button md-list-action" @click="mark">
             <md-icon :class="{'md-primary': star}">star</md-icon>
           </md-button>
         </md-list-item>
@@ -35,17 +35,17 @@
 
       <md-card-area>
         <md-list-item>
-         <router-link to="/company/123">
+         <router-link :to="'/company/' + details.companyID">
           <md-avatar>
             <img src="https://placeimg.com/40/40/people/1" alt="People">
           </md-avatar>
 
           <div class="md-list-text-container">
             <span>{{ details.companyName }}</span>
-            <span style="color:#666">半导体设备与零件 | 规模：500-1000人</span>
+            <span style="color:#666">{{ companyInfo.industry }} | {{ companyInfo.life }}</span>
             <p class="details">
               <span class="color">
-                招聘职位：25</span>
+                招聘职位：{{ count }}</span>
             </p>
           </div>
 
@@ -61,7 +61,7 @@
       </md-card-content>
     </md-card>
     <div class="btn-wrapper">
-      <md-button href="#" class="md-raised md-primary">
+      <md-button @click="getJob" class="md-raised md-primary">
         <md-icon>home</md-icon> 申请职位</md-button>
     </div>
 
@@ -77,7 +77,8 @@ export default {
     return {
       star: false,
       details: '',
-      companyDetails: ''
+      count: '',
+      companyInfo: ''
     }
   },
   computed: {
@@ -91,6 +92,28 @@ export default {
     }
   },
   methods: {
+    getJob () {
+      console.log('申请职位')
+      this.$http.get('/api/get-job', {
+        params: {
+          code: this.$route.params.id
+        }
+      })
+        .then((res) => {
+          console.log(res.data)
+        })
+    },
+    mark () {
+      this.$http.get('/api/mark-job', {
+        params: {
+          code: this.$route.params.id
+        }
+      })
+        .then((res) => {
+          console.log(res.data)
+          this.star = !!res.data
+        })
+    },
     back () {
       this.$router.go(-1)
     },
@@ -103,20 +126,10 @@ export default {
         }
       })
         .then((res) => {
-          console.log(res.data)
-          self.details = res.data
-          self.getCompany(res.data.companyID)
-        })
-    },
-    getCompany (id) {
-      this.$http.get('/companyInfo', {
-        params: {
-          code: id
-        }
-      })
-        .then((res) => {
-          console.log(res.data)
-          self.companyDetails = res.data
+          self.details = res.data.data
+          self.count = res.data.data2[0].count
+          self.companyInfo = res.data.data2[0].companyInfo
+          self.star = res.data.mark
         })
     }
   }
