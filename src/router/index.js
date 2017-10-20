@@ -10,8 +10,12 @@ import adminhire from '@/components/admin-hire'
 import myJobs from '@/components/company/myJobs'
 import companyAdd from '@/components/company/add'
 import companyAddJob from '@/components/company/add-job'
+import companyInfo from '@/components/company/companyInfo'
+import companyDetails from '@/components/company/companyDetails'
+import resumeLists from '@/components/company/resumeLists'
 import userIndex from '@/components/user/index'
 import resume from '@/components/user/resume'
+import showResume from '@/components/user/showResume'
 import state from '@/components/user/state'
 import mark from '@/components/user/mark'
 
@@ -33,7 +37,20 @@ export default new Router({
         {path: '', component: userIndex},
         {path: '/resume', component: resume},
         {path: '/state', component: state},
-        {path: '/mark', component: mark}
+        {path: '/mark', component: mark},
+        {path: '/showResume', component: showResume}
+      ]
+    },
+    {
+      path: '/adminhire',
+      component: adminhire,
+      children: [
+        {path: '', component: myJobs},
+        {path: 'add', component: companyAdd},
+        {path: 'add-job', component: companyAddJob},
+        {path: 'company-info', component: companyInfo},
+        {path: 'company-details', component: companyDetails},
+        {path: 'resume-list', component: resumeLists}
       ]
     },
     {
@@ -55,15 +72,6 @@ export default new Router({
       path: '/register',
       name: 'register',
       component: register
-    },
-    {
-      path: '/adminhire',
-      component: adminhire,
-      children: [
-        {path: '', component: myJobs},
-        {path: 'add', component: companyAdd},
-        {path: 'add-job', component: companyAddJob}
-      ]
     },
     {
       path: '*',

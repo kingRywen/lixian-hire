@@ -25,16 +25,13 @@
           </md-list-item>
         </div>
       </md-toolbar>
-      <div class="phone-viewport">
+      <div class="phone-viewport" @click="toggleLeftSidenav">
         <md-list>
           <md-list-item>
-            <router-link to="/"><md-icon>whatshot</md-icon> <span>公司信息</span></router-link>
+            <router-link :to="companyto"><md-icon>whatshot</md-icon> <span>公司信息</span></router-link>
           </md-list-item>
           <md-list-item>
-            <router-link to="/"><md-icon>whatshot</md-icon> <span>收到的简历</span></router-link>
-          </md-list-item>
-          <md-list-item>
-            <router-link to="/"><md-icon>whatshot</md-icon> <span>我的收藏</span></router-link>
+            <router-link to="/adminhire/company-info"><md-icon>whatshot</md-icon> <span>收到的简历</span></router-link>
           </md-list-item>
           <md-list-item @click="exit" class="md-primary">
             <md-icon>whatshot</md-icon> <span>退出</span>
@@ -44,7 +41,6 @@
 
       </md-sidenav>
   </div>
-
   <router-view></router-view>
 </div>
 </template>
@@ -53,6 +49,7 @@ import jwt from 'jsonwebtoken'
 
 export default {
   created () {
+    this.companyto = localStorage.getItem('isEntireInfo') ? '/adminhire/company-details' : '/adminhire/company-info'
     const userInfo = this.getUserInfo() // 获取用户信息
     if (userInfo != null) {
       this.userName = userInfo.name
@@ -63,7 +60,8 @@ export default {
     return {
       userName: '',
       user_name: '',
-      info: ''
+      info: '',
+      companyto: ''
     }
   },
   methods: {

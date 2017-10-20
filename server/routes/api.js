@@ -21,8 +21,11 @@ module.exports = function () {
   // 公司的api
   // 获取公司发布的所有职位
   apiRouter.get('/all-company-job', apiCompany.companyAllJob)
+  apiRouter.get('/getCompanyDetail', apiCompany.getCompanyDetail)
 
   // 求职者的api
   apiRouter.get('/get-job', apiCompany.userSendJob)
+  apiRouter.get('/getResume', apiCompany.userGetResume)
+
   return apiRouter
 }

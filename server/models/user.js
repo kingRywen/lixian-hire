@@ -14,9 +14,12 @@ db.once('open', function () {
 
 // 通过id查询操作
 const getUserById = async (ctx, id) => {
-  let userInfo = await LoginUserModel.findById(id)
-  console.log(userInfo)
-  return userInfo
+  return await LoginUserModel.findById(id)
+}
+
+// getResumeById 通过id查询简历
+const getResumeById = async (id) => {
+  return await LoginUserModel.findOne({_id: id}, 'resume')
 }
 
 // 通过用户名查找用户信息
@@ -70,6 +73,9 @@ const updateResume = async (ctx) => {
     return await LoginUserModel.update({ _id: id }, {
       $push: {
         'resume': body
+      },
+      $set: {
+        'isEntireInfo': true
       }
     })
   } catch (e) {
@@ -87,6 +93,11 @@ const getCompanyById = async (ctx) => {
   let userInfo = await CompanyUserModel.findById(id)
   console.log(userInfo)
   return userInfo
+}
+
+// 通过公司id查询公司的详细信息
+const getCompanyDetailById = async (id) => {
+  return await CompanyUserModel.findById(id, 'companyInfo')
 }
 
 // 创建用户
@@ -182,6 +193,16 @@ const userGetCompanyInfo = async (id) => {
   return await CompanyUserModel.find({_id: id}, 'companyInfo count')
 }
 
+// 求职者通过ID获取自己收藏的职位
+const getOwnMarkJobById = async (id) => {
+  return await JobInfoModel.find({'markUserID': [id]})
+}
+
+// 求职者通过ID获取自己收藏的公司信息
+const getOwnMarkCompanyById = async (id) => {
+  return await CompanyUserModel.find({'markUsers': [id]}, 'companyInfo')
+}
+
 // 收藏职位
 const userMarkJob = async (ctx) => {
   // 要收藏的职位的id
@@ -225,10 +246,20 @@ const userMarkCompany = async (ctx) => {
       'collectionCompany': _id
     }
   })
-  if (!result1.nModified) {
+  const result2 = await CompanyUserModel.update({_id: _id}, {
+    $addToSet: {
+      'markUsers': id
+    }
+  })
+  if (!result1.nModified && !result2.nModified) {
     await LoginUserModel.update({ _id: id }, {
       $pull: {
         'collectionCompany': _id
+      }
+    })
+    await LoginUserModel.update({ _id: _id }, {
+      $pull: {
+        'markUsers': id
       }
     })
     return 0
@@ -267,5 +298,9 @@ module.exports = {
   saveJobID,
   userMarkCompany,
   getUserMarkCompany,
-  updateResume
+  updateResume,
+  getResumeById,
+  getOwnMarkJobById,
+  getOwnMarkCompanyById,
+  getCompanyDetailById
 }

@@ -32,7 +32,7 @@ const PostUserAuth = async (ctx) => {
       }
     } else {
       const userToken = {
-        exp: Math.floor(Date.now() / 1000) + (10 * 60),
+        exp: Math.floor(Date.now() / 1000) + (24 * 3600),
         name: userInfo.user_name,
         id: userInfo._id,
         role: userInfo.role
@@ -45,7 +45,7 @@ const PostUserAuth = async (ctx) => {
       ctx.session.isEntireInfo = userInfo.isEntireInfo
       ctx.cookies.set('role', userInfo.role, {
         httpOnly: true,
-        expires: new Date(new Date().getTime() + 60 * 20 * 1000)
+        expires: new Date(new Date().getTime() + 24 * 3600 * 1000)
       })
       const token = jwt.sign(userToken, secret)
       ctx.body = {
@@ -180,10 +180,36 @@ const postResume = async (ctx) => {
   }
 }
 
+// 求职用户获取自己收藏的职位
+const getOwnMarkJob = async (ctx) => {
+  if (!ctx.session._id) {
+    ctx.throw(401, 'session required')
+  }
+  let data = await user.getOwnMarkJobById(ctx.session._id)
+  ctx.body = {
+    success: true,
+    info: data
+  }
+}
+
+// 求职用户获取自己收藏的职位
+const getOwnMarkCompany = async (ctx) => {
+  if (!ctx.session._id) {
+    ctx.throw(401, 'session required')
+  }
+  let data = await user.getOwnMarkCompanyById(ctx.session._id)
+  ctx.body = {
+    success: true,
+    info: data
+  }
+}
+
 module.exports = {
   getUserInfo,
   PostUserAuth,
   setCompanyInfo,
   postPosition,
-  postResume
+  postResume,
+  getOwnMarkJob,
+  getOwnMarkCompany
 }

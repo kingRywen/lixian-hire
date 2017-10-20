@@ -52,9 +52,7 @@ const markJob = async (ctx) => {
 // 收藏公司
 const markCompany = async (ctx) => {
   if (!ctx.session._id) {
-    ctx.body = {
-      redirect: true
-    }
+    ctx.throw(401, 'session required')
   } else {
     let data = await user.userMarkCompany(ctx)
     ctx.body = data

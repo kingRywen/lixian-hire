@@ -94,10 +94,16 @@ export default {
         .then((res) => {
           if (res.data.success) {
             console.log('更新简历成功')
-            localStorage.setItem('isEntireInfo', 0)
-            self.$router.push('/adminhire')
+            localStorage.setItem('isEntireInfo', true)
+            self.alert = {
+              content: '更新简历成功!',
+              ok: '确定'
+            }
+            self.openDialog('dialog')
           } else {
-            console.log('网络延时')
+            console.log(res.data.info)
+            localStorage.clear()
+            self.$router.push('/')
           }
         })
     }
@@ -146,7 +152,7 @@ export default {
       }
     },
     education () {
-      this.educationValid = this.education.length > 2 && this.education.trim() !== ''
+      this.educationValid = this.education.trim() !== ''
       if (!this.educationValid) {
         this.invalidJobMessage = '请选择学历'
       } else {

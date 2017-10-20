@@ -22,7 +22,37 @@ const userSendJob = async (ctx) => {
   }
 }
 
+// userGetResume 求职者查看自己的简历
+const userGetResume = async (ctx) => {
+  const id = ctx.session._id
+  if (id) {
+    let result = await user.getResumeById(id)
+    ctx.body = {
+      success: true,
+      info: result.resume[result.resume.length - 1]
+    }
+  } else {
+    ctx.throw(401, '登录过期')
+  }
+}
+
+// 公司用户查看自己的详细信息
+const getCompanyDetail = async (ctx) => {
+  const id = ctx.session._id
+  if (id) {
+    let result = await user.getCompanyDetailById(id)
+    ctx.body = {
+      success: true,
+      info: result.companyInfo
+    }
+  } else {
+    ctx.throw(401, '登录过期')
+  }
+}
+
 module.exports = {
   companyAllJob,
-  userSendJob
+  userSendJob,
+  userGetResume,
+  getCompanyDetail
 }

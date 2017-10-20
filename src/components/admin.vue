@@ -8,9 +8,9 @@
 
       <h2 class="md-title" style="flex: 1">礼贤招聘</h2>
 
-      <md-button class="md-icon-button" @click="toggleLeftSidenav">
+      <!-- <md-button class="md-icon-button" @click="toggleLeftSidenav">
         <md-icon>search</md-icon>
-      </md-button>
+      </md-button> -->
     </md-toolbar>
 
     <md-sidenav class="md-left" ref="leftSidenav">
@@ -31,10 +31,10 @@
       <div class="phone-viewport" @click="toggleLeftSidenav">
         <md-list>
           <md-list-item>
-            <router-link to="/resume"><md-icon>whatshot</md-icon> <span>我的简历</span></router-link>
+            <router-link to="/admin"><md-icon>whatshot</md-icon> <span>找工作</span></router-link>
           </md-list-item>
           <md-list-item>
-            <router-link to="/state"><md-icon>whatshot</md-icon> <span>投递状态</span></router-link>
+            <router-link :to="resume"><md-icon>whatshot</md-icon> <span>我的简历</span></router-link>
           </md-list-item>
           <md-list-item>
             <router-link to="/mark"><md-icon>whatshot</md-icon> <span>我的收藏</span></router-link>
@@ -55,17 +55,19 @@
 <script>
 import jwt from 'jsonwebtoken'
 export default {
-  created () {
+  mounted () {
+    this.resume = localStorage.getItem('isEntireInfo') ? '/showResume' : '/resume'
     const userInfo = this.getUserInfo() // 获取用户信息
     if (userInfo != null) {
-      this.userName = userInfo.userName
+      this.userName = userInfo.name
       this.user_name = userInfo.role === '1' ? '求职者' : '招聘方'
     }
   },
   data () {
     return {
       userName: '',
-      user_name: ''
+      user_name: '',
+      resume: ''
     }
   },
   methods: {

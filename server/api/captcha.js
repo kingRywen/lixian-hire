@@ -41,7 +41,7 @@ const verify = async function (ctx) {
     ctx.session.isEntireInfo = false
     ctx.cookies.set('role', ctx.request.body.role, {
       httpOnly: true,
-      expires: new Date(new Date().getTime() + 60 * 20 * 1000)
+      expires: new Date(new Date().getTime() + 24 * 3600 * 1000)
     })
     ctx.body = {
       success: true,

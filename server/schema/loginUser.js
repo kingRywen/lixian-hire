@@ -78,7 +78,8 @@ const CompanyUser = new Schema({
     introduction: String
   },
   collectionPosition: [String],
-  collectionSeekers: [String]
+  collectionSeekers: [String],
+  markUsers: [String]
 })
 
 // 发布职位的信息表
