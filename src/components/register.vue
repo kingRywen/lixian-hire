@@ -166,7 +166,7 @@ export default {
         this.$refs.snackbar.open()
         return
       }
-      this.sendRegister(obj) // 取消手机验证
+      this.sendRegister(obj)
       // 验证手机验证码是否正确
       /* this.$http.post('/api/validateCode', { // 取消手机验证
         mobile: this.sendInfo.account,

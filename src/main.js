@@ -26,7 +26,7 @@ router.beforeEach((to, from, next) => {
       }
     }
     next()
-  } else if (to.path === '/info' || to.path === '/register') {
+  } else if (to.path === '/info' || to.path === '/register' || to.path === '/password') {
     next()
   } else if (to.path === '/admin') {
     if (localStorage.getItem('role') === '1') {

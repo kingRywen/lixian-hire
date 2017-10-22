@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:16px">
     <md-card>
       <md-card-header>
         <div class="md-title">公司的信息</div>

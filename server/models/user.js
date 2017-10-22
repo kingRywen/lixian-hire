@@ -29,6 +29,18 @@ const getUserByName = async (ctx, name) => {
   return (await LoginPromise || await CompanyPromise)
 }
 
+// 通过用户id修改密码
+const updatePassword = async (name, pass) => {
+  try {
+    let encodePass = bcrypt.hashSync(pass, bcrypt.genSaltSync(10))
+    let LoginPromise = LoginUserModel.update({user_name: name}, {password: encodePass})
+    let CompanyPromise = CompanyUserModel.update({user_name: name}, {password: encodePass})
+    return (await LoginPromise || await CompanyPromise)
+  } catch (e) {
+    throw new Error(e)
+  }
+}
+
 // 创建用户
 const createUser = async (ctx) => {
   let encodePass = bcrypt.hashSync(ctx.request.body.password, bcrypt.genSaltSync(10))
@@ -100,6 +112,11 @@ const getCompanyDetailById = async (id) => {
   return await CompanyUserModel.findById(id, 'companyInfo')
 }
 
+// 通过公司id获取公司发布的职位列表
+const getCompanyJobById = async (id) => {
+  return await JobInfoModel.find({'companyID': id}, 'name salary location experience education')
+}
+
 // 创建用户
 const createCompanyUser = async (ctx) => {
   let encodePass = bcrypt.hashSync(ctx.request.body.password, bcrypt.genSaltSync(10))
@@ -143,9 +160,20 @@ const getCompanyAllJobById = async (ctx) => {
   return await JobInfoModel.find({ 'companyID': ctx.query.code }, 'name salary location education experience companyName companyID')
 }
 
+// 查找职位的投递者
+const getUserListById = async (id) => {
+  let arr = await JobInfoModel.findById(id, 'subscribUserID')
+  return await LoginUserModel.find({_id: {$in: arr.subscribUserID}}, 'userName user_name resume')
+}
+
 /**
  * 职位类读写信息
  */
+
+// 通过id读取职位详细信息
+const getJobById = async (id) => {
+  return await JobInfoModel.findById(id)
+}
 
 // 发布职位
 const postPosition = async (ctx) => {
@@ -178,6 +206,31 @@ const postPosition = async (ctx) => {
   }
 }
 
+// 公司更新职位
+const updatePosition = async (ctx) => {
+  if (!ctx.session._id) {
+    ctx.throw(401, 'auth required')
+  }
+  let body = ctx.request.body
+  try {
+    return await JobInfoModel.update({_id: body.code}, {
+      $set: {
+        name: body.name,
+        salary: body.salary,
+        createDate: new Date().getTime(),
+        location: body.location,
+        experience: body.experience,
+        education: body.education,
+        content: body.content
+      }
+    })
+  } catch (e) {
+    ctx.throw(500, 'db error', {
+      err: e
+    })
+  }
+}
+
 // 求职者获取所有职位列表
 const userGetAllList = async (ctx) => {
   return await JobInfoModel.find({}, '_id companyID companyName location education salary name experience')
@@ -195,12 +248,14 @@ const userGetCompanyInfo = async (id) => {
 
 // 求职者通过ID获取自己收藏的职位
 const getOwnMarkJobById = async (id) => {
-  return await JobInfoModel.find({'markUserID': [id]})
+  let arr = await LoginUserModel.findById(id, 'collectionPosition')
+  return await JobInfoModel.find({_id: {$in: arr.collectionPosition}}, 'name companyName location education experience salary')
 }
 
 // 求职者通过ID获取自己收藏的公司信息
 const getOwnMarkCompanyById = async (id) => {
-  return await CompanyUserModel.find({'markUsers': [id]}, 'companyInfo')
+  let arr = await LoginUserModel.findById(id, 'collectionCompany')
+  return await CompanyUserModel.find({_id: {$in: arr.collectionCompany}}, 'companyInfo')
 }
 
 // 收藏职位
@@ -302,5 +357,10 @@ module.exports = {
   getResumeById,
   getOwnMarkJobById,
   getOwnMarkCompanyById,
-  getCompanyDetailById
+  getCompanyDetailById,
+  getCompanyJobById,
+  getJobById,
+  updatePosition,
+  getUserListById,
+  updatePassword
 }

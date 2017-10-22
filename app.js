@@ -11,14 +11,9 @@ const RedisStore = require('./server/config/session')
 
 const app = new Koa()
 
-app.use(serve(path.resolve('dist')))
-
 app.use(bodyParse())
 app.use(json())
 app.use(logger())
-app.use(historyApiFallback({
-  whiteList: ['/api', '/register']
-}))
 
 app.use(session({
   key: 'SESSIONID',
@@ -27,6 +22,10 @@ app.use(session({
 
 const home = require('./server/routes')()
 app.use(home.routes())
+
+app.use(historyApiFallback())
+
+app.use(serve(path.resolve('dist')))
 
 app.listen(8889, function () {
   console.log('koa is listening in 8889')

@@ -8,17 +8,25 @@ const companyAllJob = async (ctx) => {
 
 // 求职者发送简历
 const userSendJob = async (ctx) => {
+  if (!ctx.session._id) {
+    ctx.throw(401, 'auth required')
+  }
   // 职位表保存求职者的信息
-  let result = await user.saveUserID(ctx) || await user.saveJobID(ctx)
-  if (!result) {
-    ctx.body = {
-      success: false
+  try {
+    let result = await user.saveUserID(ctx) || await user.saveJobID(ctx)
+    if (!result) {
+      ctx.body = {
+        success: false,
+        info: '已经投过简历'
+      }
+    } else {
+      ctx.body = {
+        success: true,
+        info: '简历投递成功'
+      }
     }
-  } else {
-    // 求职者表保存职位id
-    ctx.body = {
-      success: true
-    }
+  } catch (e) {
+    ctx.throw(500, 'db error')
   }
 }
 
@@ -50,9 +58,37 @@ const getCompanyDetail = async (ctx) => {
   }
 }
 
+// 获取指定id的职位信息
+const getJobInfo = async (ctx) => {
+  if (!ctx.session._id) {
+    ctx.throw(401, 'Auth required')
+  }
+  let result = await user.getJobById(ctx.query.code)
+  ctx.body = {
+    success: true,
+    info: result
+  }
+}
+
+// 获取指定id的投递者
+const getUserList = async (ctx) => {
+  let id = ctx.query.code
+  try {
+    let data = await user.getUserListById(id)
+    ctx.body = {
+      success: true,
+      data: data
+    }
+  } catch (e) {
+    ctx.throw(500, 'db error')
+  }
+}
+
 module.exports = {
   companyAllJob,
   userSendJob,
   userGetResume,
-  getCompanyDetail
+  getCompanyDetail,
+  getJobInfo,
+  getUserList
 }

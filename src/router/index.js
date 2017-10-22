@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import login from '@/components/login'
+import password from '@/components/password'
 import admin from '@/components/admin'
 import info from '@/components/info'
 import jobDetail from '@/components/jobDetail'
@@ -13,6 +14,8 @@ import companyAddJob from '@/components/company/add-job'
 import companyInfo from '@/components/company/companyInfo'
 import companyDetails from '@/components/company/companyDetails'
 import resumeLists from '@/components/company/resumeLists'
+import editJob from '@/components/company/editJob'
+import updateJob from '@/components/company/updateJob'
 import userIndex from '@/components/user/index'
 import resume from '@/components/user/resume'
 import showResume from '@/components/user/showResume'
@@ -29,6 +32,11 @@ export default new Router({
       path: '/',
       name: 'login',
       component: login
+    },
+    {
+      path: '/password',
+      name: 'password',
+      component: password
     },
     {
       path: '/admin',
@@ -50,7 +58,9 @@ export default new Router({
         {path: 'add-job', component: companyAddJob},
         {path: 'company-info', component: companyInfo},
         {path: 'company-details', component: companyDetails},
-        {path: 'resume-list', component: resumeLists}
+        {path: 'resume-list', component: resumeLists},
+        {path: 'edit-job/:id', component: editJob},
+        {path: 'update-job/:id', component: updateJob}
       ]
     },
     {

@@ -7,8 +7,8 @@
       </md-button>
       <h2 class="md-title" style="flex: 1">礼贤招聘</h2>
     </md-toolbar>
-
-    <md-card md-with-hover style="margin-bottom:50px">
+    <div class="md-tab" style="padding:16px">
+      <md-card md-with-hover style="margin-bottom:50px">
       <md-card-area>
         <md-list-item style="padding:24px 0">
           <div class="md-list-text-container">
@@ -60,6 +60,8 @@
         {{ details.content }}
       </md-card-content>
     </md-card>
+    </div>
+    
     <div class="btn-wrapper">
       <md-button @click="getJob" class="md-raised md-primary">
         <md-icon>home</md-icon> 申请职位</md-button>
@@ -123,9 +125,13 @@ export default {
       })
         .then((res) => {
           console.log(res.data)
-          if (!res.data.success) {
+          if (res.status === 500) {
+            this.alert.content = '数据库操作失败'
             this.openDialog('dialog')
+            return
           }
+          this.alert.content = res.data.info
+          this.openDialog('dialog')
         })
     },
     mark () {

@@ -28,10 +28,10 @@
       <div class="phone-viewport" @click="toggleLeftSidenav">
         <md-list>
           <md-list-item>
-            <router-link :to="companyto"><md-icon>whatshot</md-icon> <span>公司信息</span></router-link>
+            <router-link to="/adminhire"><md-icon>whatshot</md-icon> <span>发布的职位</span></router-link>
           </md-list-item>
           <md-list-item>
-            <router-link to="/adminhire/company-info"><md-icon>whatshot</md-icon> <span>收到的简历</span></router-link>
+            <router-link :to="companyto"><md-icon>whatshot</md-icon> <span>公司信息</span></router-link>
           </md-list-item>
           <md-list-item @click="exit" class="md-primary">
             <md-icon>whatshot</md-icon> <span>退出</span>
@@ -110,7 +110,40 @@ export default {
 }
 </script>
 <style scoped>
+.md-list-text-container > :nth-child(2), .md-list-text-container > :nth-child(3){
+   color: rgba(255, 255, 255, 0.54);
+}
+.list-avator{
+    list-style: none;
+    margin: 0 auto;
+    padding-top: 4em;
+}
+.title{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.showItems .md-list-text-container > :nth-child(2):not(:last-child) {
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 12px;
+}
 
+.md-list-text-container > :nth-child(2), .md-list-text-container > :nth-child(3){
+   color: rgba(255, 255, 255, 0.54);
+}
+.showItems .md-list-text-container > :nth-child(2), .md-list-text-container > :nth-child(3) {
+    margin: 0;
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 12px;
+}
+.list-avator{
+    list-style: none;
+    margin: 0 auto;
+    padding-top: 4em;
+}
+.money{
+  font-size: 12px
+}
 </style>
 
 

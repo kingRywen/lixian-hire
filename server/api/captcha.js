@@ -151,6 +151,100 @@ const checkPhoneCode = async (ctx) => {
   }
 }
 
+// 发送验证码找回密码
+const sendPhonePassword = async (ctx) => {
+  if (await isPhoneRegister(ctx)) {
+    let Nonce = randomString.generate(30)
+    let CurTime = Date.now().toString()
+    let CheckSum = sha(configs.yunxin.secret + Nonce + CurTime)
+    let AppKey = configs.yunxin.AppKey
+    let headers = {
+      AppKey,
+      Nonce,
+      CurTime,
+      CheckSum
+    }
+    headers = Object.assign({
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'charset': 'UTF-8'
+    }, headers)
+    try {
+      let url = `${configs.yunxin.sendUrl}?mobile=${ctx.request.body.phone}&templateid=${configs.yunxin.templateid}&codeLen=${configs.yunxin.codeLen}`
+      let result = await koaRequest({
+        url: url,
+        method: 'post',
+        headers
+      })
+      console.log(result.body)
+      ctx.session.headers = headers
+      if (result.body.code === 200) {
+        ctx.body = {
+          success: true,
+          info: {
+            code: result.body.code
+          }
+        }
+      } else {
+        ctx.body = {
+          success: false,
+          info: {
+            code: result.body.msg
+          }
+        }
+      }
+    } catch (error) {
+      ctx.body = {
+        success: false,
+        info: error.message
+      }
+    }
+  } else {
+    ctx.body = {
+      success: false,
+      info: '手机号未被注册'
+    }
+  }
+}
+
+// 校检找回密码 验证码
+const checkPhoneCodePassword = async (ctx) => {
+  let sessionID = ctx.cookies.get('SESSIONID')
+  if (sessionID) {
+    if (ctx.session.headers) {
+      try {
+        let url = `${configs.yunxin.verifyUrl}?mobile=${ctx.request.body.mobile}&code=${ctx.request.body.code}`
+        let result = await koaRequest({
+          url: url,
+          method: 'post',
+          headers: ctx.session.headers
+        })
+        ctx.session.phone = ctx.request.body.mobile
+        ctx.body = result.body
+      } catch (e) {
+        throw (e)
+      }
+    } else {
+      ctx.body = {
+        success: false,
+        info: '手机验证超时，请重新验证'
+      }
+    }
+  } else {
+    ctx.body = {
+      success: false,
+      info: '手机验证超时，请重新验证'
+    }
+  }
+}
+
+// 修改密码
+const updatePassword = async (ctx) => {
+  let data = await user.updatePassword(ctx.session.phone, ctx.request.body.password)
+  ctx.body = {
+    data: data
+  }
+}
+
 // 退出登录
 const exit = async (ctx) => {
   ctx.session = {}
@@ -171,6 +265,9 @@ module.exports = {
   verify,
   sendPhone,
   checkPhoneCode,
+  sendPhonePassword,
+  checkPhoneCodePassword,
+  updatePassword,
   exit,
   test
 }

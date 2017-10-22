@@ -192,7 +192,7 @@ const getOwnMarkJob = async (ctx) => {
   }
 }
 
-// 求职用户获取自己收藏的职位
+// 求职用户获取自己收藏的公司
 const getOwnMarkCompany = async (ctx) => {
   if (!ctx.session._id) {
     ctx.throw(401, 'session required')
@@ -204,6 +204,30 @@ const getOwnMarkCompany = async (ctx) => {
   }
 }
 
+// 公司用户获取自己发布的职位列表
+const getCompanyJob = async (ctx) => {
+  if (!ctx.session._id) {
+    ctx.throw(401, 'session required')
+  }
+  let data = await user.getCompanyJobById(ctx.session._id)
+  ctx.body = {
+    success: true,
+    info: data
+  }
+}
+
+// 公司用户修改自己发布的职位
+const updatePosition = async (ctx) => {
+  try {
+    await user.updatePosition(ctx)
+    ctx.body = {
+      success: true
+    }
+  } catch (e) {
+    ctx.throw(500, 'db error')
+  }
+}
+
 module.exports = {
   getUserInfo,
   PostUserAuth,
@@ -211,5 +235,7 @@ module.exports = {
   postPosition,
   postResume,
   getOwnMarkJob,
-  getOwnMarkCompany
+  getOwnMarkCompany,
+  getCompanyJob,
+  updatePosition
 }

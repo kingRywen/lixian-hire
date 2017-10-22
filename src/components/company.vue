@@ -7,7 +7,7 @@
       </md-button>
       <h2 class="md-title" style="flex: 1">礼贤招聘</h2>
     </md-toolbar>
-
+    <div style="padding:16px">
     <md-card md-with-hover style="margin-bottom:20px">
       <md-card-area>
         <md-list-item style="padding:24px 0">
@@ -42,6 +42,7 @@
         <p v-html="companyInfo.introduction"></p>
       </md-card-content>
     </md-card>
+    </div>
 
     <md-card>
       <md-card-area>

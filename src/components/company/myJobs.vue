@@ -1,16 +1,17 @@
 <template>
-  <md-list class="custom-list md-triple-line showItems" v-if="items.length">
-    <md-subheader>我发布的职位(10个)</md-subheader>
+<div v-if="items.length">
+  <md-list class="custom-list md-triple-line showItems">
+    <md-subheader>我发布的职位({{ items.length }}个)</md-subheader>
     <md-list-item v-for="(item,index) in items" :key="index">
-      <router-link :to="'/job-detail/' + item.id">
+      <router-link :to="'/adminhire/edit-job/' + item._id">
         <md-avatar>
           <img :src="item.companyLogoUrl" alt="People">
         </md-avatar>
 
         <div class="md-list-text-container">
-          <span>{{ item.job }}</span>
-          <span>{{ item.companyName }}</span>
-          <p>{{ item.tags.join('|') }}</p>
+          <span>{{ item.name }}</span>
+          <span>{{ item.salary }}</span>
+          <p>{{ `${item.location} | ${item.experience} | ${item.education}` }}</p>
         </div>
         <div class="money">{{ item.money }}</div>
         <!-- <md-button class="md-icon-button md-list-action">
@@ -20,7 +21,13 @@
 
       <md-divider class="md-inset"></md-divider>
     </md-list-item>
+    
   </md-list>
+  <router-link tag="md-button" style="position:fixed" to="/adminhire/add" class="md-fab md-primary md-fab-bottom-right">
+    <md-icon>add</md-icon>
+  </router-link>
+</div>
+  
   <div v-else class="add-new-job">
     <div class="new-job-btn">
       <router-link tag="md-button" to="/adminhire/add" class="md-fab md-primary">
@@ -37,57 +44,21 @@
 </template>
 <script>
   export default {
+    mounted () {
+      this.getData()
+    },
+    methods: {
+      getData () {
+        this.$http.get('/auth/get-company-job')
+          .then((res) => {
+            console.log(res.data)
+            this.items = res.data.info
+          })
+      }
+    },
     data () {
       return {
         items: []
-      /* items: [{
-        id: 123,
-        companyLogoUrl: 'https://placeimg.com/40/40/people/1',
-        companyName: '应用材料（中国）有限公司',
-        job: '芯片模拟电路设计工程师',
-        tags: ['上海', '应届生', '在校生', '本科及以上', '全职'],
-        money: '50万-100万'
-      },
-      {
-        id: 123,
-        companyLogoUrl: 'https://placeimg.com/40/40/people/1',
-        companyName: '应用材料（中国）有限公司',
-        job: '芯片模拟电路设计工程师',
-        tags: ['上海', '应届生', '在校生', '本科及以上', '全职'],
-        money: '50万-100万'
-      },
-      {
-        id: 123,
-        companyLogoUrl: 'https://placeimg.com/40/40/people/1',
-        companyName: '应用材料（中国）有限公司',
-        job: '芯片模拟电路设计工程师',
-        tags: ['上海', '应届生', '在校生', '本科及以上', '全职'],
-        money: '50万-100万'
-      },
-      {
-        id: 123,
-        companyLogoUrl: 'https://placeimg.com/40/40/people/1',
-        companyName: '应用材料（中国）有限公司',
-        job: '芯片模拟电路设计工程师',
-        tags: ['上海', '应届生', '在校生', '本科及以上', '全职'],
-        money: '50万-100万'
-      },
-      {
-        id: 123,
-        companyLogoUrl: 'https://placeimg.com/40/40/people/1',
-        companyName: '应用材料（中国）有限公司',
-        job: '芯片模拟电路设计工程师',
-        tags: ['上海', '应届生', '在校生', '本科及以上', '全职'],
-        money: '50万-100万'
-      },
-      {
-        id: 123,
-        companyLogoUrl: 'https://placeimg.com/40/40/people/1',
-        companyName: '应用材料（中国）有限公司',
-        job: '芯片模拟电路设计工程师',
-        tags: ['上海', '应届生', '在校生', '本科及以上', '全职'],
-        money: '50万-100万'
-      }] */
       }
     }
   }

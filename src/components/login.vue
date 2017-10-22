@@ -23,7 +23,7 @@
     </form>
     <md-layout md-gutter>
       <md-layout md-flex="60" class="forget">
-        <a href="#">忘记密码？</a>
+        <router-link to="/password">忘记密码？</router-link>
       </md-layout>
       <md-layout md-flex="40">
         <md-button class="md-raised md-primary login-btn" @click="loginToAdmin">登陆</md-button>
