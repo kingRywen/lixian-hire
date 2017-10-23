@@ -60,7 +60,7 @@ export default new Router({
         {path: 'company-details', component: companyDetails},
         {path: 'resume-list', component: resumeLists},
         {path: 'edit-job/:id', component: editJob},
-        {path: 'update-job/:id', component: updateJob}
+        {path: 'update-job/:id', component: updateJob} 
       ]
     },
     {
