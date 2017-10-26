@@ -1,5 +1,5 @@
 <template>
-  <div id="login">
+  <div id="register">
     <md-snackbar md-position="top center" ref="snackbar" md-duration="2000">
       <span>{{ msg }}</span>
       <md-button class="md-accent" @click="$refs.snackbar.close()">确定</md-button>
@@ -228,8 +228,10 @@ export default {
 </script>
 
 <style scoped>
-#login {
-  padding: 2em
+#register {
+  width: 100vw;
+  padding: 2em;
+  height: 100vh;
 }
 
 #login-title {

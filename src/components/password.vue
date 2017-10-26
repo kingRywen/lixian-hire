@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="toggle-box">
     <md-snackbar md-position="top center" ref="snackbar" md-duration="2000">
       <span>{{ msg }}</span>
       <md-button class="md-accent" @click="$refs.snackbar.close()">确定</md-button>

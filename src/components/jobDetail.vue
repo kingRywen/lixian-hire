@@ -1,13 +1,14 @@
 <template>
   
-  <div>
+  <div class="toggle-box">
     <md-toolbar>
       <md-button class="md-icon-button" @click="back">
         <md-icon>navigate_before</md-icon>
       </md-button>
       <h2 class="md-title" style="flex: 1">礼贤招聘</h2>
     </md-toolbar>
-    <div class="md-tab" style="padding:16px">
+    <com-loading :loading="!details"></com-loading>
+    <div class="md-tab" style="padding:16px" v-show="details">
       <md-card md-with-hover style="margin-bottom:50px">
       <md-card-area>
         <md-list-item style="padding:24px 0">
@@ -77,7 +78,11 @@
 
 </template>
 <script>
+import comLoading from './loading.vue'
 export default {
+  components: {
+    comLoading
+  },
   mounted () {
     this.getData()
   },

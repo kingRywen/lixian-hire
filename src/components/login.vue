@@ -89,7 +89,9 @@ export default {
 
 <style scoped>
 #login {
-  padding: 2em
+  width: 100vw;
+  padding: 2em;
+  height: 100vh;
 }
 
 #login-title {

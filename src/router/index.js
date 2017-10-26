@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 // import login from '@/components/login'
 // import password from '@/components/password'
-// import admin from '@/components/admin'
+import admin from '@/components/admin'
 // import info from '@/components/info'
 // import jobDetail from '@/components/jobDetail'
 // import company from '@/components/company'
@@ -40,7 +40,7 @@ export default new Router({
     },
     {
       path: '/admin',
-      component: resolve => require(['@/components/admin'], resolve),
+      component: admin,
       children: [
         {path: '', component: resolve => require(['@/components/user/index'], resolve)},
         {path: '/resume', component: resolve => require(['@/components/user/resume'], resolve)},

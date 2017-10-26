@@ -1,6 +1,6 @@
 <template>
   
-  <div>
+  <div class="toggle-box">
     <md-toolbar>
       <md-button class="md-icon-button" @click="back">
         <md-icon>navigate_before</md-icon>

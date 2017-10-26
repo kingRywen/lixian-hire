@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="toggle-box">
   <div class="phone-viewport">
     <md-toolbar>
       <md-button class="md-icon-button" @click="toggleLeftSidenav">
