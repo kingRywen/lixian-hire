@@ -38,7 +38,7 @@
         <md-list-item>
          <router-link :to="'/company/' + details.companyID">
           <md-avatar>
-            <img src="https://placeimg.com/40/40/people/1" alt="People">
+            <img src="/static/avatar.png" alt="People">
           </md-avatar>
 
           <div class="md-list-text-container">

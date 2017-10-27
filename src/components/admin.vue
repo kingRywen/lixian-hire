@@ -1,6 +1,6 @@
 <template>
 <div class="toggle-box">
-  <div class="phone-viewport">
+  <div class="phone-viewport header">
     <md-toolbar>
       <md-button class="md-icon-button" @click="toggleLeftSidenav">
         <md-icon>menu</md-icon>
@@ -104,6 +104,9 @@ export default {
 <style scoped>
 .md-list-text-container > :nth-child(2), .md-list-text-container > :nth-child(3){
    color: rgba(255, 255, 255, 0.54);
+}
+.header {
+  z-index: 1;
 }
 .list-avator{
     list-style: none;

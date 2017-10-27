@@ -31,7 +31,8 @@
         <md-list-item v-for="(item,index) in items" :key="index">
           <router-link :to="'/job-detail/' + item._id">
             <md-avatar>
-              <img src="https://placeimg.com/40/40/people/1" alt="People">
+              <!-- <i class="iconfont">&#xe644;</i> -->
+              <img src="/static/avatar.png" alt="People">
             </md-avatar>
 
             <div class="md-list-text-container">
@@ -70,11 +71,16 @@ export default {
   },
   methods: {
     refresh (loaded) {
-      setTimeout(() => {
-        // this.dataList.reverse()
-        console.log('刷新数据')
+      console.log('刷新数据')
+      this.$http.get('/api/jobs')
+      .then((res) => {
+        this.loading = false
+        console.log(res.data)
         loaded('done')
-      }, 2000)
+        this.items = res.data
+      }, err => {
+        throw (err)
+      })
     },
     stateChange (state) {
       if (state === 'pull' || state === 'trigger') {
@@ -100,24 +106,8 @@ export default {
 }
 </script>
 <style scoped>
-@font-face {
-  font-family: 'iconfont';  /* project id 455025 */
-  src: url('//at.alicdn.com/t/font_455025_2dgauneckhhestt9.eot');
-  src: url('//at.alicdn.com/t/font_455025_2dgauneckhhestt9.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_455025_2dgauneckhhestt9.woff') format('woff'),
-  url('//at.alicdn.com/t/font_455025_2dgauneckhhestt9.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_455025_2dgauneckhhestt9.svg#iconfont') format('svg');
-}
-.iconfont{
-  font-family:"iconfont" !important;
-  font-size:16px;font-style:normal;
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-stroke-width: 0.2px;
-  -moz-osx-font-smoothing: grayscale;
-  display: inline-block;
-}
 .header {
-    z-index: 222;
+    z-index: 1;
     background: #fff;
 }
 .top-load-wrapper {

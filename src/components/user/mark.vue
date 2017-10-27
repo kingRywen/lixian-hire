@@ -18,7 +18,7 @@
           <md-list-item v-for="(item,index) in items" :key="index">
             <router-link :to="'/job-detail/' + item._id">
               <md-avatar>
-                <img src="https://placeimg.com/40/40/people/1" alt="People">
+                <img src="/static/avatar.png" alt="People">
               </md-avatar>
 
               <div class="md-list-text-container">
@@ -42,7 +42,7 @@
           <md-list-item v-for="(item,index) in itemCompanys" :key="index">
             <router-link :to="'/company/' + item._id">
               <md-avatar>
-                <img src="https://placeimg.com/40/40/people/1" alt="People">
+                <img src="/static/avatar.png" alt="People">
               </md-avatar>
 
               <div class="md-list-text-container">

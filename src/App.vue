@@ -55,6 +55,7 @@ export default {
 #app {
   height: 100vh;
 }
+
 .animated {
   animation-fill-mode: both;
 }
@@ -102,5 +103,25 @@ export default {
 .toggle-box {
   width: 100vw;
   height: 100vh;
+}
+@font-face {
+  font-family: 'iconfont';  /* project id 455025 */
+  src: url('//at.alicdn.com/t/font_455025_3vxs4fvw0ch7u8fr.eot');
+  src: url('//at.alicdn.com/t/font_455025_3vxs4fvw0ch7u8fr.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_455025_3vxs4fvw0ch7u8fr.woff') format('woff'),
+  url('//at.alicdn.com/t/font_455025_3vxs4fvw0ch7u8fr.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_455025_3vxs4fvw0ch7u8fr.svg#iconfont') format('svg');
+}
+.iconfont{
+  font-family:"iconfont" !important;
+  font-size:16px;font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+  display: inline-block;
+}
+.md-avatar i {
+    font-size: 40px;
+    line-height: 1.1;
 }
 </style>
