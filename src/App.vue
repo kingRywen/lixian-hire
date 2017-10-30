@@ -53,7 +53,7 @@ export default {
 
 <style>
 #app {
-  height: 100vh;
+  height: 100vh
 }
 
 .animated {
