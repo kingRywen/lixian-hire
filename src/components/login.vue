@@ -9,15 +9,21 @@
     </div>
     <form novalidate @submit.stop.prevent="submit">
       <md-input-container>
-        <md-icon>account_circle</md-icon>
+        <i class="iconfont md-icon md-theme-default material-icons">&#xe642;</i>
+        <!-- <md-icon>account_circle</md-icon> -->
         <label>用户名</label>
         <md-input type="text" v-model="account"></md-input>
       </md-input-container>
 
-      <md-input-container md-has-password>
-        <md-icon>lock</md-icon>
+      <md-input-container>
+        <!-- <md-icon>lock</md-icon> -->
+        <i class="iconfont md-icon md-theme-default material-icons">&#xe661;</i>
         <label>密码</label>
-        <md-input type="password" v-model="password"></md-input>
+        <md-input :type="passwordType" v-model="password" ref="pass"></md-input>
+        <button type="button" class="md-button md-icon-button md-toggle-password md-theme-default" tabindex="-1" @click="togglePasswordType"> 
+          <i aria-hidden="true" class="iconfont md-icon md-theme-default material-icons" v-html="showPassword ? '&#xe60f;' : '&#xe68d;'"></i>
+        <div class="md-ink-ripple"><div class="md-ripple" style="width: 40px; height: 40px;"></div></div>
+        </button>
       </md-input-container>
 
     </form>
@@ -42,13 +48,25 @@ export default {
     return {
       account: '',
       password: '',
-      msg: ''
+      msg: '',
+      showPassword: false,
+      passwordType: 'password'
     }
   },
   mounted () {
     this.$refs.snackbar.close()
   },
   methods: {
+    togglePasswordType () {
+      if (this.passwordType === 'password') {
+        this.passwordType = 'text'
+        this.showPassword = true
+      } else {
+        this.passwordType = 'password'
+        this.showPassword = false
+      }
+      this.$refs.pass.$el.focus()
+    },
     loginToAdmin () {
       let obj = {
         name: this.account,

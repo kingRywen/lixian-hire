@@ -2,7 +2,8 @@
   <div>
     <md-tabs class="md-transparent" md-fixed>
       <template slot="header-item" slot-scope="props">
-        <md-icon v-if="props.header.icon">{{ props.header.icon }}</md-icon>
+        <!-- <md-icon v-if="props.header.icon">{{ props.header.icon }}</md-icon> -->
+        <i class="iconfont md-icon md-theme-default material-icons" v-if="props.header.icon" v-html="props.header.icon"></i>
         <template v-if="props.header.options && props.header.options.new_badge">
           <span v-if="props.header.label" class="label-with-new-badge">
             {{ props.header.label }}
@@ -13,7 +14,7 @@
           <span v-if="props.header.label">{{ props.header.label }}</span>
         </template>
       </template>
-      <md-tab md-icon="grade" md-label="收藏的职位">
+      <md-tab md-icon="&#xe655;" md-label="收藏的职位">
         <md-list class="custom-list md-triple-line showItems">
           <md-list-item v-for="(item,index) in items" :key="index">
             <router-link :to="'/job-detail/' + item._id">
@@ -37,7 +38,7 @@
         </md-list>
       </md-tab>
 
-      <md-tab md-icon="favorite" md-label="收藏的公司">
+      <md-tab md-icon="&#xe666;" md-label="收藏的公司">
         <md-list class="custom-list md-triple-line showItems">
           <md-list-item v-for="(item,index) in itemCompanys" :key="index">
             <router-link :to="'/company/' + item._id">

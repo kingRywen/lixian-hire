@@ -3,7 +3,7 @@
   <div class="toggle-box">
     <md-toolbar>
       <md-button class="md-icon-button" @click="back">
-        <md-icon>navigate_before</md-icon>
+        <i class="iconfont md-icon md-theme-default material-icons">&#xe65a;</i>
       </md-button>
       <h2 class="md-title" style="flex: 1">礼贤招聘</h2>
     </md-toolbar>
@@ -15,19 +15,21 @@
           <div class="md-list-text-container">
             <span style="font-size:20px;line-height:24px">{{ details.name }}</span>
             <span><b class="color">{{ details.salary }}</b> | 
-              <md-icon style="font-size:16px;min-width:16px;width:16px">alarm</md-icon> 发布时间：{{ time }}</span>
+              <i class="iconfont md-icon md-theme-default material-icons" style="font-size:16px;min-width:16px;width:16px">&#xe613;</i> 发布时间：{{ time }}</span>
             <p class="details">
               <span>
-                <md-icon>place</md-icon>{{ details.location }}</span> |
-              <span>
-                <md-icon>av_timer</md-icon>{{ details.experience }}</span> |
-              <span>
-                <md-icon>face</md-icon>{{ details.education }}</span>
+                
+                <i class="iconfont md-icon md-theme-default material-icons">&#xe614;</i>
+                {{ details.location }}</span> |
+              <span><i class="iconfont md-icon md-theme-default material-icons">&#xe615;</i>
+                {{ details.experience }}</span> |
+              <span><i class="iconfont md-icon md-theme-default material-icons">&#xe616;</i>
+                {{ details.education }}</span>
             </p>
           </div>
 
           <md-button class="md-icon-button md-list-action" @click="mark">
-            <md-icon :class="{'md-primary': star}">star</md-icon>
+            <i class="iconfont md-icon md-theme-default material-icons" :class="{'md-primary': star}">&#xe666;</i>
           </md-button>
         </md-list-item>
         
@@ -51,7 +53,7 @@
           </div>
 
           <md-button class="md-icon-button md-list-action">
-            <md-icon>keyboard_arrow_right</md-icon>
+            <i class="iconfont md-icon md-theme-default material-icons">&#xe64b;</i>
           </md-button>
          </router-link>
         </md-list-item>
@@ -65,7 +67,7 @@
     
     <div class="btn-wrapper">
       <md-button @click="getJob" class="md-raised md-primary">
-        <md-icon>home</md-icon> 申请职位</md-button>
+        <i class="iconfont md-icon md-theme-default material-icons send">&#xe6bf;</i> 申请职位</md-button>
     </div>
     <md-dialog-alert
       :md-content="alert.content"
@@ -172,7 +174,14 @@ export default {
 }
 </script>
 <style scoped>
-
+.send {
+      font-size: 18px;
+    line-height: 1.1;
+    transform: rotate(-45deg);
+}
+.md-list-text-container i {
+  line-height: 1.4
+}
 .color {
   color: #FF5722
 }

@@ -5,7 +5,7 @@
     <md-list-item v-for="(item,index) in items" :key="index">
       <router-link :to="'/adminhire/edit-job/' + item._id">
         <md-avatar>
-          <img :src="item.companyLogoUrl" alt="People">
+          <img src="/static/avatar.png" alt="People">
         </md-avatar>
 
         <div class="md-list-text-container">
@@ -24,14 +24,14 @@
     
   </md-list>
   <router-link tag="md-button" style="position:fixed" to="/adminhire/add" class="md-fab md-primary md-fab-bottom-right">
-    <md-icon>add</md-icon>
+    <i class="iconfont md-icon md-theme-default material-icons">&#xe619;</i>
   </router-link>
 </div>
   
   <div v-else class="add-new-job">
     <div class="new-job-btn">
       <router-link tag="md-button" to="/adminhire/add" class="md-fab md-primary">
-        <md-icon>add</md-icon>
+        <i class="iconfont md-icon md-theme-default material-icons">&#xe619;</i>
       </router-link>
     </div>
     <div class="new-job-text">

@@ -3,7 +3,8 @@
   <div class="phone-viewport header">
     <md-toolbar>
       <md-button class="md-icon-button" @click="toggleLeftSidenav">
-        <md-icon>menu</md-icon>
+        <!-- <md-icon>menu</md-icon> -->
+        <i class="iconfont md-icon md-theme-default material-icons">&#xe600;</i>
       </md-button>
 
       <h2 class="md-title" style="flex: 1">礼贤招聘</h2>
@@ -18,7 +19,8 @@
         <div class="md-toolbar-container list-avator">
           <md-list-item>
             <md-avatar class="md-avatar-icon md-accent">
-              <md-icon>account_circle</md-icon>
+              <!-- <md-icon>account_circle</md-icon> -->
+              <i class="iconfont md-icon md-theme-default material-icons">&#xe642;</i>
             </md-avatar>
 
             <div class="md-list-text-container">
@@ -31,16 +33,16 @@
       <div class="phone-viewport" @click="toggleLeftSidenav">
         <md-list>
           <md-list-item>
-            <router-link to="/admin"><md-icon>whatshot</md-icon> <span>找工作</span></router-link>
+            <router-link to="/admin"><i class="iconfont md-icon md-theme-default material-icons">&#xe677;</i> <span>找工作</span></router-link>
           </md-list-item>
           <md-list-item>
-            <router-link :to="resume"><md-icon>whatshot</md-icon> <span>我的简历</span></router-link>
+            <router-link :to="resume"><i class="iconfont md-icon md-theme-default material-icons">&#xe69b;</i> <span>我的简历</span></router-link>
           </md-list-item>
           <md-list-item>
-            <router-link to="/mark"><md-icon>whatshot</md-icon> <span>我的收藏</span></router-link>
+            <router-link to="/mark"><i class="iconfont md-icon md-theme-default material-icons">&#xe666;</i> <span>我的收藏</span></router-link>
           </md-list-item>
           <md-list-item @click="exit" class="md-primary">
-            <md-icon>whatshot</md-icon> <span>退出</span>
+            <i class="iconfont md-icon md-theme-default material-icons">&#xe61d;</i> <span>退出</span>
           </md-list-item>
           
         </md-list>
@@ -80,6 +82,7 @@ export default {
           console.log(decode)
         } catch (error) {
           alert('登录超时，请重新登录')
+          this.exit()
           this.$router.push('/')
         }
         return decode
@@ -102,6 +105,10 @@ export default {
 }
 </script>
 <style scoped>
+.md-avatar i{
+  font-size: 24px;
+  line-height: 1
+}
 .md-list-text-container > :nth-child(2), .md-list-text-container > :nth-child(3){
    color: rgba(255, 255, 255, 0.54);
 }

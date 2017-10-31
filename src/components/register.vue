@@ -10,13 +10,7 @@
     <form novalidate @submit.stop.prevent="submit">
 
       <md-input-container>
-        <md-icon>account_circle</md-icon>
-        <label>请输入昵称</label>
-        <md-input type="text" v-model="sendInfo.userName"></md-input>
-      </md-input-container>
-
-      <md-input-container>
-        <md-icon>group</md-icon>
+        <i class="iconfont md-icon md-theme-default material-icons">&#xe617;</i>
         <label for="country">请选择角色</label>
         <md-select class="md-input" name="country" id="country" v-model="sendInfo.role">
           <md-option value="1">求职方</md-option>
@@ -25,25 +19,35 @@
       </md-input-container>
 
       <md-input-container>
-        <md-icon>stay_primary_portrait</md-icon>
-        <label>请输入手机号</label>
+        <i class="iconfont md-icon md-theme-default material-icons">&#xe642;</i>
+        <label>{{ sendInfo.role === '1' ? '请输入真实姓名' : '请输入公司名称'}}</label>
+        <md-input type="text" v-model="sendInfo.userName"></md-input>
+      </md-input-container>      
+
+      <md-input-container>
+        <i class="iconfont md-icon md-theme-default material-icons">&#xe708;</i>
+        <label>请输入手机号或坐机</label>
         <md-input type="text" @blur="isMobile" v-model="sendInfo.account"></md-input>
       </md-input-container>
 
-      <md-input-container>
-        <md-icon>stay_primary_portrait</md-icon>
+      <md-input-container v-if="isCode">
+        <i class="iconfont md-icon md-theme-default material-icons">&#xe708;</i>
         <label>手机验证码</label>
         <md-input type="text" v-model="sendInfo.phoneCode"></md-input><md-button type="button" :disabled="!btn" style="width:auto;margin:0" @click.native="getPhoneCode">获取验证码 {{ sen }}</md-button>
       </md-input-container>
 
-      <md-input-container md-has-password>
-        <md-icon>lock</md-icon>
+      <md-input-container>
+        <i class="iconfont md-icon md-theme-default material-icons">&#xe661;</i>
         <label>密码</label>
-        <md-input type="password" v-model="sendInfo.password"></md-input>
+        <md-input :type="passwordType" v-model="sendInfo.password" ref="pass"></md-input>
+        <button type="button" class="md-button md-icon-button md-toggle-password md-theme-default" tabindex="-1" @click="togglePasswordType"> 
+          <i aria-hidden="true" class="iconfont md-icon md-theme-default material-icons" v-html="showPassword ? '&#xe60f;' : '&#xe68d;'"></i>
+        <div class="md-ink-ripple"><div class="md-ripple" style="width: 40px; height: 40px;"></div></div>
+        </button>
       </md-input-container>
 
       <md-input-container>
-        <md-icon>verified_user</md-icon>
+        <i class="iconfont md-icon md-theme-default material-icons">&#xe612;</i>
         <label>请输入验证码</label>
         <md-input type="text" v-model="sendInfo.captcha" ref="input"></md-input><img :src="captchaSrc" @click="reloadCaptcha">
       </md-input-container>
@@ -71,6 +75,8 @@ export default {
       sen: null,
       btn: true,
       captchaKey: Date.now(),
+      passwordType: 'password',
+      showPassword: false,
       sendInfo: {
         account: '',
         phoneCode: '',
@@ -85,8 +91,18 @@ export default {
     this.$refs.snackbar.close()
   },
   methods: {
+    togglePasswordType () {
+      if (this.passwordType === 'password') {
+        this.passwordType = 'text'
+        this.showPassword = true
+      } else {
+        this.passwordType = 'password'
+        this.showPassword = false
+      }
+      this.$refs.pass.$el.focus()
+    },
     isMobile () {
-      let reg = /^1[3|4|5|8][0-9]\d{4,8}$/
+      let reg = /^(((0\d{2,3}-|0\d{2,3}|)\d{7,8})|(1[3584]\d{9}))$/
       if (!reg.test(this.sendInfo.account)) {
         this.msg = '手机号码不正确.'
         this.$refs.snackbar.open()
@@ -102,6 +118,9 @@ export default {
     getPhoneCode () {
       console.log('获取手机验证码')
       if (!this.isMobile()) {
+        return
+      }
+      if (!this.isCode) {
         return
       }
       let self = this
@@ -222,6 +241,10 @@ export default {
   computed: {
     captchaSrc () {
       return `/api/captcha?key=${this.captchaKey}`
+    },
+    isCode () {
+      let reg = /^1[3|4|5|8][0-9]\d{4,8}$/  // 判断是否为手机
+      return reg.test(this.sendInfo.account)
     }
   }
 }

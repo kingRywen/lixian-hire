@@ -30,10 +30,10 @@
             <md-option value="1000人以上">1000人以上</md-option>
           </md-select>
         </md-input-container>
-        <md-input-container :class="{'md-input-invalid': !industryValid}">
+        <!-- <md-input-container :class="{'md-input-invalid': !industryValid}">
           <md-input type="text" v-model="industry" required/>
           <label>行业</label>
-        </md-input-container>
+        </md-input-container> -->
         <md-input-container :class="{'md-input-invalid': !introductionValid}">
           <label>公司简介</label>
           <md-textarea maxlength="2000" v-model="introduction" required></md-textarea>

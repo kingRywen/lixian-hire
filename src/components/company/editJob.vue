@@ -10,14 +10,14 @@
               <div class="md-list-text-container">
                 <span style="font-size:20px;line-height:24px">{{ details.name }}</span>
                 <span><b class="color">{{ details.salary }}</b> | 
-                  <md-icon style="font-size:16px;min-width:16px;width:16px">alarm</md-icon> 发布时间：{{ time }}</span>
+                  <i class="iconfont md-icon md-theme-default material-icons" style="font-size:16px;min-width:16px;width:16px">&#xe613;</i> 发布时间：{{ time }}</span>
                 <p class="details">
                   <span>
-                    <md-icon>place</md-icon>{{ details.location }}</span> |
+                    <i class="iconfont md-icon md-theme-default material-icons">&#xe614;</i>{{ details.location }}</span> |
                   <span>
-                    <md-icon>av_timer</md-icon>{{ details.experience }}</span> |
+                    <i class="iconfont md-icon md-theme-default material-icons">&#xe615;</i>{{ details.experience }}</span> |
                   <span>
-                    <md-icon>face</md-icon>{{ details.education }}</span>
+                    <i class="iconfont md-icon md-theme-default material-icons">&#xe616;</i>{{ details.education }}</span>
                 </p>
               </div>
             </md-list-item>
@@ -81,7 +81,7 @@
       ref="dialog">
     </md-dialog-alert>
   <router-link tag="md-button" style="position:fixed" :to="'/adminhire/update-job/' + $route.params.id" class="md-fab md-primary md-fab-bottom-right">
-    <md-icon>edit</md-icon>
+    <i class="iconfont md-icon md-theme-default material-icons">&#xe610;</i>
   </router-link>
   </div>
 

@@ -8,12 +8,15 @@
     <md-step :md-editable="true" md-label="第一步" :md-error="!valid" :md-continue="valid" :md-message="invalidMessage">
         <p>输入你注册时用的手机号</p>
         <md-input-container :class="{'md-input-invalid': !mailValid}">
-            <md-icon>stay_primary_portrait</md-icon>
+            <!-- <md-icon>stay_primary_portrait</md-icon> -->
+            <i class="iconfont md-icon md-theme-default material-icons">&#xe708;</i>
+
             <label>手机号</label>
             <md-input type="text" v-model="phone" required/>
         </md-input-container>
         <md-input-container :class="{'md-input-invalid': !codeValid}">
-          <md-icon>stay_primary_portrait</md-icon>
+          <!-- <md-icon>stay_primary_portrait</md-icon> -->
+          <i class="iconfont md-icon md-theme-default material-icons">&#xe612;</i>
           <label>验证码</label>
           <md-input type="text" v-model.number="code"></md-input>
           <md-button type="button" 
@@ -24,7 +27,8 @@
     </md-step>
     <md-step :md-disabled="!valid" md-label="第二步" :md-continue="valid" md-button-continue="修改密码">
         <md-input-container>
-            <md-icon>lock</md-icon>
+            <!-- <md-icon>lock</md-icon> -->
+            <i class="iconfont md-icon md-theme-default material-icons">&#xe661;</i>
             <label>新密码</label>
             <md-input type="password" v-model="password" required/>
         </md-input-container>

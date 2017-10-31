@@ -3,7 +3,7 @@
   <div class="toggle-box">
     <md-toolbar>
       <md-button class="md-icon-button" @click="back">
-        <md-icon>navigate_before</md-icon>
+        <i class="iconfont md-icon md-theme-default material-icons">&#xe65a;</i>
       </md-button>
       <h2 class="md-title" style="flex: 1">礼贤招聘</h2>
     </md-toolbar>
@@ -25,7 +25,7 @@
           </div>
 
           <md-button class="md-icon-button md-list-action" @click="mark">
-            <md-icon :class="{'md-primary': star}">star</md-icon>
+            <i class="iconfont md-icon md-theme-default material-icons" :class="{'md-primary': star}">&#xe666;</i>
           </md-button>
         </md-list-item>
         
@@ -53,7 +53,7 @@
       <md-list-item v-for="(item,index) in items" :key="index">
         <router-link :to="'/job-detail/' + item._id">
           <md-avatar>
-            <img alt="People">
+            <img src="/static/avatar.png">
           </md-avatar>
 
           <div class="md-list-text-container">

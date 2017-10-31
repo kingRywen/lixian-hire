@@ -7,6 +7,7 @@ import axios from 'axios'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.css'
 import store from './store'
+import jwt from 'jsonwebtoken'
 
 Vue.config.productionTip = false
 Vue.config.debug = true
@@ -19,10 +20,16 @@ router.beforeEach((to, from, next) => {
   }
   if (to.path === '/') {
     if (token != null && token !== 'null') {
-      if (localStorage.getItem('role') === '2') {
-        next('/adminhire')
-      } else {
-        next('/admin')
+      try {
+        jwt.verify(token, 'jiang')
+        if (localStorage.getItem('role') === '2') {
+          next('/adminhire')
+        } else {
+          next('/admin')
+        }
+      } catch (error) {
+        localStorage.clear()
+        next()
       }
     }
     next()
