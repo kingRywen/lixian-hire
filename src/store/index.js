@@ -4,9 +4,20 @@ import router from '../router'
 
 Vue.use(Vuex)
 
+function getScrollTop () {
+  var scrollTop = 0
+  if (document.documentElement && document.documentElement.scrollTop) {
+    scrollTop = document.documentElement.scrollTop
+  } else if (document.body) {
+    scrollTop = document.body.scrollTop
+  }
+  return scrollTop
+}
+
 export default new Vuex.Store({
   state: {
-    count: 0
+    count: 0,
+    position: ''
   },
   mutations: {
     logOut () {
@@ -15,6 +26,14 @@ export default new Vuex.Store({
       router.replace({
         path: '/'
       })
+    },
+    getScrollPosition (state) {
+      state.position = getScrollTop()
+    }
+  },
+  actions: {
+    getScrollPosition ({commit}) {
+      commit('getScrollPosition')
     }
   }
 })

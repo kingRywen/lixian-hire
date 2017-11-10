@@ -82,6 +82,7 @@
 <script>
 import comLoading from './loading.vue'
 export default {
+  name: 'jobDetail',
   components: {
     comLoading
   },

@@ -107,7 +107,7 @@ export default {
 
 <style scoped>
 #login {
-  width: 100vw;
+  width: 100%;
   padding: 2em;
   height: 100vh;
 }

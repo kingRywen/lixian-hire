@@ -67,6 +67,7 @@
 </template>
 <script>
 export default {
+  name: 'mark',
   mounted () {
     this.getData()
   },

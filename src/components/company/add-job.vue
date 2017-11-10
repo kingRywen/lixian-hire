@@ -55,7 +55,7 @@ export default {
   data () {
     return {
       alert: {
-        content: 'Your post has been deleted!',
+        content: '发布职位成功!',
         ok: 'Cool!'
       },
       invalidJobMessage: '',

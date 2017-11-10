@@ -34,7 +34,7 @@
         
       </md-card-content>
       <md-card-actions>
-        <router-link tag="md-button" to="/resume" class="md-raised md-primary">修改简历</router-link>
+        <router-link tag="md-button" to="/admin/resume" class="md-raised md-primary">修改简历</router-link>
       </md-card-actions>
     </md-card>
   </div>

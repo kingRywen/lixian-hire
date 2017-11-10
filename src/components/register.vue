@@ -252,7 +252,7 @@ export default {
 
 <style scoped>
 #register {
-  width: 100vw;
+  width: 100%;
   padding: 2em;
   height: 100vh;
 }

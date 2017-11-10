@@ -39,7 +39,7 @@
             <router-link :to="resume"><i class="iconfont md-icon md-theme-default material-icons">&#xe69b;</i> <span>我的简历</span></router-link>
           </md-list-item>
           <md-list-item>
-            <router-link to="/mark"><i class="iconfont md-icon md-theme-default material-icons">&#xe666;</i> <span>我的收藏</span></router-link>
+            <router-link to="/admin/mark"><i class="iconfont md-icon md-theme-default material-icons">&#xe666;</i> <span>我的收藏</span></router-link>
           </md-list-item>
           <md-list-item @click="exit" class="md-primary">
             <i class="iconfont md-icon md-theme-default material-icons">&#xe61d;</i> <span>退出</span>
@@ -50,7 +50,10 @@
 
       </md-sidenav>
   </div>
-  <router-view></router-view>
+  <!-- <router-view v-if="!$route.meta.keepAlive"></router-view> -->
+  <keep-alive>
+    <router-view></router-view>
+  </keep-alive>
   
 </div>
 </template>
@@ -58,7 +61,7 @@
 import jwt from 'jsonwebtoken'
 export default {
   mounted () {
-    this.resume = localStorage.getItem('isEntireInfo') !== 'false' ? '/showResume' : '/resume'
+    this.resume = localStorage.getItem('isEntireInfo') !== 'false' ? '/admin/showResume' : '/admin/resume'
     const userInfo = this.getUserInfo() // 获取用户信息
     if (userInfo != null) {
       this.userName = userInfo.name
@@ -142,9 +145,6 @@ export default {
     list-style: none;
     margin: 0 auto;
     padding-top: 4em;
-}
-.money{
-  font-size: 12px
 }
 </style>
 

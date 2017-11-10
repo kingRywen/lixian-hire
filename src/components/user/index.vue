@@ -56,6 +56,7 @@
 import comLoading from '../loading.vue'
 import PullTo from 'vue-pull-to'
 export default {
+  name: 'adminIndex',
   components: {
     comLoading,
     PullTo
@@ -129,6 +130,28 @@ export default {
     from {transform: rotate(0deg);}
     to {transform: rotate(360deg);}
   }
+  .showItems .md-list-text-container > :nth-child(2):not(:last-child) {
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 12px;
+}
+
+.md-list-text-container > :nth-child(2), .md-list-text-container > :nth-child(3){
+   color: rgba(255, 255, 255, 0.54);
+}
+.showItems .md-list-text-container > :nth-child(2), .md-list-text-container > :nth-child(3) {
+    margin: 0;
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 12px;
+}
+.list-avator{
+    list-style: none;
+    margin: 0 auto;
+    padding-top: 4em;
+}
+  .money{
+  font-size: 12px;
+  color: #ff5722
+}
 .sk-cube-grid {
   width: 20px;
   height: 20px;

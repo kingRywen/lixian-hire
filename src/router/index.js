@@ -26,7 +26,7 @@ Vue.use(Router)
 
 export default new Router({
   mode: 'history',
-  base: __dirname,
+  // saveScrollPosition: true,
   routes: [
     {
       path: '/',
@@ -42,11 +42,11 @@ export default new Router({
       path: '/admin',
       component: admin,
       children: [
-        {path: '', component: resolve => require(['@/components/user/index'], resolve)},
-        {path: '/resume', component: resolve => require(['@/components/user/resume'], resolve)},
-        {path: '/state', component: resolve => require(['@/components/user/state'], resolve)},
-        {path: '/mark', component: resolve => require(['@/components/user/mark'], resolve)},
-        {path: '/showResume', component: resolve => require(['@/components/user/showResume'], resolve)}
+        {path: '', meta: {keepAlive: true}, component: resolve => require(['@/components/user/index'], resolve)},
+        {path: 'resume', component: resolve => require(['@/components/user/resume'], resolve)},
+        {path: 'state', component: resolve => require(['@/components/user/state'], resolve)},
+        {path: 'mark', meta: {keepAlive: true}, component: resolve => require(['@/components/user/mark'], resolve)},
+        {path: 'showResume', component: resolve => require(['@/components/user/showResume'], resolve)}
       ]
     },
     {

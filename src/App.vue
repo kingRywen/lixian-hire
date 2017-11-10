@@ -1,7 +1,9 @@
 <template>
   <div id="app">
-    <transition :name="transitionName">
-      <router-view></router-view>
+    <transition :name="transitionName" v-on:before-leave="beforeLeave">
+        <keep-alive exclude="jobDetail">
+          <router-view></router-view>
+        </keep-alive>
     </transition>
   </div>
 </template>
@@ -12,6 +14,13 @@ export default {
   data () {
     return {
       transitionName: ''
+    }
+  },
+  methods: {
+    beforeLeave (to, from, next) {
+      console.log(to)
+      // this.$store.dispatch('getScrollPosition')
+      this.$store.commit('getScrollPosition')
     }
   },
   computed: {
@@ -25,15 +34,15 @@ export default {
       const fromPath = from.path.split('/')[1]
       if (toPath === '') {
         this.transitionName = 'login'
-        return
+        // return
       }
       if (toPath === 'register') {
         this.transitionName = 'register'
-        return
+        // return
       }
       if (fromPath === '' && toPath === ('admin' || 'adminhire')) {
         this.transitionName = 'register'
-        return
+        // return
       }
       if (to.path.split('/') < from.path.split('/')) {
         this.transitionName = 'login'
@@ -52,10 +61,23 @@ export default {
 </script>
 
 <style>
-#app {
-  height: 100vh
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  max-width: 600px;
+  margin: 0 auto;
 }
-
+#app {
+  height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  position: relative;
+}
+.md-theme-default.md-toolbar{
+  background: linear-gradient(to left,#389aef,#3f51b5);
+}
 .animated {
   animation-fill-mode: both;
 }
@@ -101,7 +123,7 @@ export default {
   display: none;
 }
 .toggle-box {
-  width: 100vw;
+  width: 100%;
   height: 100vh;
 }
 /* @font-face {

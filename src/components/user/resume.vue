@@ -56,10 +56,13 @@
 </template>
 <script>
 export default {
+  mounted () {
+    this.getData()
+  },
   data () {
     return {
       alert: {
-        content: 'Your post has been deleted!',
+        content: '更新简历成功!',
         ok: 'Cool!'
       },
       invalidJobMessage: '',
@@ -78,6 +81,18 @@ export default {
     }
   },
   methods: {
+    getData () {
+      this.$http.get('/api/getResume')
+        .then((res) => {
+          console.log(res.data)
+          this.fullName = res.data.info.fullName
+          this.sex = res.data.info.sex
+          this.email = res.data.info.email
+          this.city = res.data.info.city
+          this.workingLife = res.data.info.workingLife
+          this.education = res.data.info.education
+        })
+    },
     openDialog (ref) {
       this.$refs[ref].open()
     },
