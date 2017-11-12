@@ -26,7 +26,7 @@
           </md-card-area>
 
           <md-card-content>
-            {{ details.content }}
+            <div v-html="details.content"></div>
           </md-card-content>
         </md-card>
       </md-tab>

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <transition :name="transitionName" v-on:before-leave="beforeLeave">
-        <keep-alive exclude="jobDetail">
+        <keep-alive exclude="jobDetail|admin">
           <router-view></router-view>
         </keep-alive>
     </transition>
@@ -33,7 +33,7 @@ export default {
       const toPath = to.path.split('/')[1]
       const fromPath = from.path.split('/')[1]
       if (toPath === '') {
-        this.transitionName = 'login'
+        this.transitionName = 'login'ffff1
         // return
       }
       if (toPath === 'register') {

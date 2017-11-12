@@ -47,7 +47,7 @@
     <md-card>
       <md-card-area>
         <md-card-content>
-          <div class="md-title">招聘职位</div>
+          <div class="md-title" style="font-size:18px">招聘职位</div>
         </md-card-content>
       </md-card-area>
       <md-list-item v-for="(item,index) in items" :key="index">

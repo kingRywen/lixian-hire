@@ -60,8 +60,9 @@
 <script>
 import jwt from 'jsonwebtoken'
 export default {
+  name: 'admin',
   mounted () {
-    this.resume = localStorage.getItem('isEntireInfo') !== 'false' ? '/admin/showResume' : '/admin/resume'
+    this.resume = localStorage.getItem('isEntireInfo') !== 'false' ? '/admin/resume' : '/admin/showResume'
     const userInfo = this.getUserInfo() // 获取用户信息
     if (userInfo != null) {
       this.userName = userInfo.name

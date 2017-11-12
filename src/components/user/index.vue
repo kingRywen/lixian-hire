@@ -2,8 +2,9 @@
   <div>
     <md-list class="custom-list md-triple-line showItems">
     <md-subheader class="header">热门职位</md-subheader>
+    </md-list>
       <com-loading :loading="!items.length"></com-loading>
-      <pull-to :top-load-method="refresh" @top-state-change="stateChange">
+      <pull-to :top-load-method="refresh" @top-state-change="stateChange" @infinite-scroll="loadmore">
         <template slot="top-block" slot-scope="props">
           <!-- <div class="top-load-wrapper">
             <svg class="icon"
@@ -28,6 +29,7 @@
             {{ props.stateText }}
           </div>
         </template>
+        <md-list class="custom-list md-triple-line showItems">
         <md-list-item v-for="(item,index) in items" :key="index">
           <router-link :to="'/job-detail/' + item._id">
             <md-avatar>
@@ -47,9 +49,13 @@
           </router-link>
 
           <md-divider class="md-inset"></md-divider>
-        </md-list-item>
+        </md-list-item></md-list>
+        <div class="loading-bar" v-if="items.length > 7">
+            <i class="iconfont icon-loading" v-html="'&#xe62d;'"></i>
+            加载中
+          </div>
       </pull-to>
-    </md-list>
+    
   </div>
 </template>
 <script>
@@ -71,6 +77,11 @@ export default {
     this.getData()
   },
   methods: {
+    loadmore () {
+      setTimeout(() => {
+        console.log('加载')
+      }, 1000)
+    },
     refresh (loaded) {
       console.log('刷新数据')
       this.$http.get('/api/jobs')
@@ -126,6 +137,11 @@ export default {
     animation-iteration-count: infinite;
     animation-direction: alternate;
   }
+  .loading-bar {
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+  }
   @keyframes loading {
     from {transform: rotate(0deg);}
     to {transform: rotate(360deg);}
@@ -152,6 +168,18 @@ export default {
   font-size: 12px;
   color: #ff5722
 }
+.icon-loading {
+    transform: rotate(0deg);
+    animation-name: loading;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
+  @keyframes loading
+  {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+  }
 .sk-cube-grid {
   width: 20px;
   height: 20px;
