@@ -33,7 +33,7 @@ export default {
       const toPath = to.path.split('/')[1]
       const fromPath = from.path.split('/')[1]
       if (toPath === '') {
-        this.transitionName = 'login'ffff1
+        this.transitionName = 'login'
         // return
       }
       if (toPath === 'register') {
