@@ -61,6 +61,7 @@ export default {
 </script>
 
 <style>
+@import './common/sass/index.scss';
 body {
   display: flex;
   align-items: center;
@@ -80,6 +81,9 @@ body {
 }
 .animated {
   animation-fill-mode: both;
+}
+.md-list-item .md-list-item-container > .md-icon:first-child {
+  margin-right: 16px
 }
 @keyframes slideInRight {
   from {

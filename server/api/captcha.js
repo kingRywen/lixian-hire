@@ -6,6 +6,7 @@ const configs = require('../config')
 const randomString = require('randomstring')
 const sha = require('node-sha1')
 const koaRequest = require('koa2-request')
+const MessageXSend = require('./submail/messageXSend.js')
 
 // 验证图形验证码
 const verify = async function (ctx) {
@@ -64,52 +65,28 @@ const isPhoneRegister = async (ctx) => {
   }
 }
 
-// 发送验证码
+// 使用submail发送手机验证码
 const sendPhone = async (ctx) => {
   if (!await isPhoneRegister(ctx)) {
-    console.log('未被注册')
-    let Nonce = randomString.generate(30)
-    let CurTime = Date.now().toString()
-    let CheckSum = sha(configs.yunxin.secret + Nonce + CurTime)
-    let AppKey = configs.yunxin.AppKey
-    let headers = {
-      AppKey,
-      Nonce,
-      CurTime,
-      CheckSum
-    }
-    headers = Object.assign({
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'charset': 'UTF-8'
-    }, headers)
-    try {
-      let url = `${configs.yunxin.sendUrl}?mobile=${ctx.request.body.phone}&templateid=${configs.yunxin.templateid}&codeLen=${configs.yunxin.codeLen}`
-      let result = await koaRequest({
-        url: url,
-        method: 'post',
-        headers
-      })
-      console.log(result.body)
-      ctx.session.headers = headers
-      if (result.body.code === 200) {
-        ctx.body = {
-          success: true,
-          info: {
-            code: result.body.code
-          }
-        }
-      } else {
-        ctx.body = {
-          success: false,
-          info: {
-            code: result.body.msg
-          }
-        }
-      }
-    } catch (error) {
+    ctx.session.messageXSend = new MessageXSend()
+    var messageXSend = ctx.session.messageXSend
+
+    var code = Math.random().toFixed(6).slice(2)
+
+    messageXSend.add_to(ctx.request.body.phone)
+    messageXSend.set_project('UnJDq3')
+    messageXSend.add_var('code', code)
+    messageXSend.add_var('time', '10分钟')
+
+    var result = await messageXSend.xsend()
+
+    if (result.status === 'success') {
+      ctx.session.codeEx = new Date().getTime() + '' // 记录发送的时间
+      ctx.session.code = code
+      ctx.session.phone = ctx.request.body.phone
       ctx.body = {
-        success: false,
-        info: error.message
+        success: true,
+        info: '发送短信验证码成功'
       }
     }
   } else {
@@ -124,32 +101,120 @@ const sendPhone = async (ctx) => {
 const checkPhoneCode = async (ctx) => {
   let sessionID = ctx.cookies.get('SESSIONID')
   if (sessionID) {
-    if (ctx.session.headers) {
-      try {
-        let url = `${configs.yunxin.verifyUrl}?mobile=${ctx.request.body.mobile}&code=${ctx.request.body.code}`
-        let result = await koaRequest({
-          url: url,
-          method: 'post',
-          headers: ctx.session.headers
-        })
-        ctx.session.isCheck = true
-        ctx.body = result.body
-      } catch (e) {
-        throw (e)
-      }
-    } else {
+    if (new Date().getTime() > Number(ctx.session.codeEx) + 60 * 10 * 1000) {
       ctx.body = {
         success: false,
-        info: '手机验证超时，请重新验证'
+        info: '验证码超时，请重新发送验证码'
       }
+      return
+    }
+    if (ctx.request.body.mobile === ctx.session.phone && ctx.request.body.code === ctx.session.code) {
+      ctx.body = {
+        code: 200,
+        success: true,
+        info: '验证成功'
+      }
+      return
+    }
+    ctx.body = {
+      code: 300,
+      success: false,
+      info: '验证码错误，请重新输入验证码'
     }
   } else {
     ctx.body = {
       success: false,
-      info: '手机验证超时，请重新验证'
+      info: '登陆超时'
     }
   }
 }
+
+// 发送验证码
+// const sendPhone = async (ctx) => {
+//   if (!await isPhoneRegister(ctx)) {
+//     console.log('未被注册')
+//     let Nonce = randomString.generate(30)
+//     let CurTime = Date.now().toString()
+//     let CheckSum = sha(configs.yunxin.secret + Nonce + CurTime)
+//     let AppKey = configs.yunxin.AppKey
+//     let headers = {
+//       AppKey,
+//       Nonce,
+//       CurTime,
+//       CheckSum
+//     }
+//     headers = Object.assign({
+//       'Content-Type': 'application/x-www-form-urlencoded',
+//       'charset': 'UTF-8'
+//     }, headers)
+//     try {
+//       let url = `${configs.yunxin.sendUrl}?mobile=${ctx.request.body.phone}&templateid=${configs.yunxin.templateid}&codeLen=${configs.yunxin.codeLen}`
+//       let result = await koaRequest({
+//         url: url,
+//         method: 'post',
+//         headers
+//       })
+//       console.log(result.body)
+//       ctx.session.headers = headers
+//       if (result.body.code === 200) {
+//         ctx.body = {
+//           success: true,
+//           info: {
+//             code: result.body.code
+//           }
+//         }
+//       } else {
+//         ctx.body = {
+//           success: false,
+//           info: {
+//             code: result.body.msg
+//           }
+//         }
+//       }
+//     } catch (error) {
+//       ctx.body = {
+//         success: false,
+//         info: error.message
+//       }
+//     }
+//   } else {
+//     ctx.body = {
+//       success: false,
+//       info: '手机号已经被注册'
+//     }
+//   }
+// }
+
+// // 校检验证码
+// const checkPhoneCode = async (ctx) => {
+//   let sessionID = ctx.cookies.get('SESSIONID')
+//   if (sessionID) {
+//     if (ctx.session.headers) {
+//       try {
+//         let url = `${configs.yunxin.verifyUrl}?mobile=${ctx.request.body.mobile}&code=${ctx.request.body.code}`
+//         let result = await koaRequest({
+//           url: url,
+//           method: 'post',
+//           headers: ctx.session.headers
+//         })
+//         ctx.session.isCheck = true
+//         ctx.body = result.body
+//       } catch (e) {
+//         throw (e)
+//       }
+//     } else {
+//       ctx.body = {
+//         success: false,
+//         info: '手机验证超时，请重新验证'
+//       }
+//     }
+//   } else {
+//     ctx.body = {
+//       success: false,
+//       info: '手机验证超时，请重新验证'
+//     }
+//   }
+// }
 
 // 发送验证码找回密码
 const sendPhonePassword = async (ctx) => {

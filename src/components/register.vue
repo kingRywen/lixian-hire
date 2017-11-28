@@ -17,12 +17,15 @@
           <md-option value="2">招聘方</md-option>
         </md-select>
       </md-input-container>
-
-      <md-input-container>
-        <i class="iconfont md-icon md-theme-default material-icons">&#xe642;</i>
-        <label>{{ sendInfo.role === '1' ? '请输入真实姓名' : '请输入公司名称'}}</label>
-        <md-input type="text" v-model="sendInfo.userName"></md-input>
-      </md-input-container>      
+      <transition name="showIT">
+        <md-input-container v-if="sendInfo.role">
+          <i class="iconfont md-icon md-theme-default material-icons">&#xe642;</i>
+          <label v-if="!sendInfo.role"></label>
+          <label v-else>{{ sendInfo.role === '1' ? '请输入真实姓名' : '请输入公司名称'}}</label>
+          <md-input type="text" v-model="sendInfo.userName"></md-input>
+        </md-input-container>
+      </transition>
+            
 
       <md-input-container>
         <i class="iconfont md-icon md-theme-default material-icons">&#xe708;</i>
@@ -129,6 +132,8 @@ export default {
       })
       .then((res) => {
         if (res.data.success) {
+          this.msg = res.data.info
+          this.$refs.snackbar.open()
           self.btn = false
           self.sen = 60
           let timer = setInterval(function () {
@@ -185,7 +190,26 @@ export default {
         this.$refs.snackbar.open()
         return
       }
-      this.sendRegister(obj)
+      // 验证手机验证码是否正确
+      this.$http.post('/api/validateCode', { // 取消手机验证
+        mobile: this.sendInfo.account,
+        code: this.sendInfo.phoneCode
+      })
+      .then((res) => {
+        console.log(res.data)
+        if (res.data.code === 200) { // 验证成功
+          this.sendRegister(obj)
+        } else {
+          this.msg = res.data.info
+          this.$refs.snackbar.open()
+        }
+      }, (err) => {
+        this.msg = err.message
+        this.$refs.snackbar.open()
+        this.$router.push('/register')
+      })
+
+      // this.sendRegister(obj)
       // 验证手机验证码是否正确
       /* this.$http.post('/api/validateCode', { // 取消手机验证
         mobile: this.sendInfo.account,
@@ -282,6 +306,16 @@ export default {
     justify-content: center;
     align-items: center;
     height: 100px;
+}
+
+.showIT-enter-active, .showIT-leave-active {
+  transition: all .25s ease-in-out;
+  transform: rotateX(0)
+}
+.showIT-enter, .showIT-leave-to {
+  opacity: 0;
+  height: 0;
+  transform: rotateX(90deg)
 }
 </style>
 

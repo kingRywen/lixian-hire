@@ -49,7 +49,7 @@ import jwt from 'jsonwebtoken'
 
 export default {
   created () {
-    this.companyto = localStorage.getItem('isEntireInfo') ? '/adminhire/company-details' : '/adminhire/company-info'
+    this.companyto = localStorage.getItem('isEntireInfo') ? '/adminhire/company-info' : '/adminhire/company-details'
     const userInfo = this.getUserInfo() // 获取用户信息
     if (userInfo != null) {
       this.userName = userInfo.name
@@ -111,6 +111,9 @@ export default {
 }
 </script>
 <style scoped>
+.md-toolbar {
+  z-index:2 ;
+}
 .md-avatar i{
   font-size: 24px;
   line-height: 1

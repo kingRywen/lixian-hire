@@ -99,9 +99,8 @@
   font-size: 12px
 }
 .add-new-job {
-  position: fixed;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 64px);
   display: flex;
   align-items: center;
   justify-content: center;

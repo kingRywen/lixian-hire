@@ -62,7 +62,7 @@ import jwt from 'jsonwebtoken'
 export default {
   name: 'admin',
   mounted () {
-    this.resume = localStorage.getItem('isEntireInfo') !== 'false' ? '/admin/resume' : '/admin/showResume'
+    this.resume = localStorage.getItem('isEntireInfo') !== 'false' ? '/admin/showResume' : '/admin/resume'
     const userInfo = this.getUserInfo() // 获取用户信息
     if (userInfo != null) {
       this.userName = userInfo.name
@@ -109,6 +109,9 @@ export default {
 }
 </script>
 <style scoped>
+.md-toolbar {
+  z-index:2 ;
+}
 .md-avatar i{
   font-size: 24px;
   line-height: 1

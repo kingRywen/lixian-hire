@@ -14,14 +14,17 @@
             <md-option value="男">男</md-option>
             <md-option value="女">女</md-option>
           </md-select>
+          <div id="sex1" class="select_box"></div>
         </md-input-container>
+        
         <md-input-container :class="{'md-input-invalid': !emailValid}">
           <md-input type="text" v-model="email" required/>
           <label>邮箱</label>
         </md-input-container>
         <md-input-container :class="{'md-input-invalid': !cityValid}">
           <md-input type="text" v-model="city" required/>
-          <label>地址</label>
+          <label for="city">常住地</label>
+          <div id="city1" class="select_box"></div>
         </md-input-container>
         <md-input-container :class="{'md-input-invalid': !workingLifeValid}">
           <label for="workingLife">工作经验</label>
@@ -32,6 +35,7 @@
             <md-option value="工作五年左右">工作五年左右</md-option>
             <md-option value="工作十年以上">工作十年以上</md-option>
           </md-select>
+          <div id="workingLife1" class="select_box"></div>
         </md-input-container>
         <md-input-container :class="{'md-input-invalid': !educationValid}">
           <label for="education">学历</label>
@@ -43,6 +47,7 @@
             <md-option value="研究生">研究生</md-option>
             <md-option value="博士">博士</md-option>
           </md-select>
+          <div id="education1" class="select_box"></div>
         </md-input-container>
         
       </md-step>
@@ -55,9 +60,87 @@
   </div>
 </template>
 <script>
+import MobileSelect from 'mobile-select'
+import data from '../../store/city.json'
 export default {
   mounted () {
     this.getData()
+    var vm = this
+    console.log(data)
+    var cityData = []
+    var index = 0
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        let element = {}
+        element['id'] = (index++) + ''
+        element['value'] = key
+        element['childs'] = []
+        let j = 0
+        for (const i in data[key]) {
+          if (data[key].hasOwnProperty(i)) {
+            const el = {}
+            let n = 0
+            el['id'] = (j++) + ''
+            el['value'] = i
+            el['childs'] = data[key][i].map(function (x) {
+              return {
+                id: (n++) + '',
+                value: x
+              }
+            })
+            element['childs'].push(el)
+          }
+        }
+        cityData.push(element)
+      }
+    }
+    console.log(cityData)
+    var selectSex = new MobileSelect({
+      trigger: '#sex1',
+      title: '性别',
+      wheels: [
+        {data: ['男', '女']}
+      ],
+      triggerDisplayData: false,
+      callback (indexArr, data) {
+        vm.sex = data[0]
+      }
+    })
+    var selectWorkingLife = new MobileSelect({
+      trigger: '#workingLife1',
+      title: '工作经验',
+      wheels: [
+        {data: ['应届生', '工作一年', '工作三年左右', '工作五年左右', '工作十年以上']}
+      ],
+      triggerDisplayData: false,
+      callback (indexArr, data) {
+        vm.workingLife = data[0]
+      }
+    })
+    var selectCity = new MobileSelect({
+      trigger: '#city1',
+      title: '常住地',
+      wheels: [
+        {data: cityData}
+      ],
+      triggerDisplayData: false,
+      callback (indexArr, data) {
+        console.log(data.map((el) => el.value).join(''))
+        vm.city = data.map((el) => el.value).join('')
+      }
+    })
+    var selectEducation = new MobileSelect({
+      trigger: '#education1',
+      title: '学历',
+      wheels: [
+        {data: ['小学以下', '中专以上', '大专以上', '本科', '研究生', '博士']}
+      ],
+      triggerDisplayData: false,
+      callback (indexArr, data) {
+        vm.education = data[0]
+      }
+    })
+    console.log(selectSex, selectWorkingLife, selectEducation, selectCity)
   },
   data () {
     return {
@@ -85,6 +168,9 @@ export default {
       this.$http.get('/api/getResume')
         .then((res) => {
           console.log(res.data)
+          if (!res.data.info) {
+            return
+          }
           this.fullName = res.data.info.fullName
           this.sex = res.data.info.sex
           this.email = res.data.info.email
@@ -228,5 +314,11 @@ export default {
 }
 .new-job-text {
   margin-top: 4em
+}
+.select_box {
+  position: absolute;
+  width: 100%;
+  z-index: 222;
+  height: 100%;
 }
 </style>
