@@ -5,7 +5,6 @@ import App from './App'
 import router from './router'
 import axios from 'axios'
 import VueMaterial from 'vue-material'
-import 'vue-material/dist/vue-material.css'
 import store from './store'
 import jwt from 'jsonwebtoken'
 
