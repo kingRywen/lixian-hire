@@ -12,7 +12,7 @@
       <md-input-container>
         <i class="iconfont md-icon md-theme-default material-icons">&#xe617;</i>
         <label for="country">请选择角色</label>
-        <md-select class="md-input" name="country" id="country" v-model="sendInfo.role">
+        <md-select class="md-input" name="country" id="country" v-model="sendInfo.role" :disabled="disabledInput">
           <md-option value="1">求职方</md-option>
           <md-option value="2">招聘方</md-option>
         </md-select>
@@ -65,7 +65,7 @@
       </md-layout>
     </md-layout>
     <md-layout md-gutter class="register">
-      <router-link to="/">已经有账号？立即登录</router-link>
+      <router-link :to="{ name: 'login', params: { id: $route.params.id }}">已经有账号？立即登录</router-link>
       
     </md-layout>
   </div>
@@ -80,6 +80,7 @@ export default {
       captchaKey: Date.now(),
       passwordType: 'password',
       showPassword: false,
+      disabledInput: true,
       sendInfo: {
         account: '',
         phoneCode: '',
@@ -92,6 +93,11 @@ export default {
   },
   mounted () {
     this.$refs.snackbar.close()
+    if (this.$route.params.id === 'index') {
+      this.disabledInput = false
+      return
+    }
+    this.sendInfo.role = this.$route.params.id === 'seeker' ? '1' : '2'
   },
   methods: {
     togglePasswordType () {
@@ -283,7 +289,7 @@ export default {
 
 #login-title {
   width: 100%;
-  min-height: 40px;
+  min-height: 100px;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-flow: column;

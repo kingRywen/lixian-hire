@@ -29,8 +29,12 @@ export default new Router({
   // saveScrollPosition: true,
   routes: [
     {
-      path: '/',
+      path: '/login/:id',
       name: 'login',
+      component: resolve => require(['@/components/login'], resolve)
+    },
+    {
+      path: '/',
       component: resolve => require(['@/components/login'], resolve)
     },
     {
@@ -79,7 +83,7 @@ export default new Router({
       component: resolve => require(['@/components/company'], resolve)
     },
     {
-      path: '/register',
+      path: '/register/:id',
       name: 'register',
       component: resolve => require(['@/components/register'], resolve)
     },

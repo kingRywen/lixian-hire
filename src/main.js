@@ -32,7 +32,7 @@ router.beforeEach((to, from, next) => {
       }
     }
     next()
-  } else if (to.path === '/info' || to.path === '/register' || to.path === '/password') {
+  } else if (to.path === '/info' || to.path === '/register/seeker' || to.path === '/register/index' || to.path === '/register/recruiter' || to.path === '/password' || to.path === '/login/seeker' || to.path === '/login/index' || to.path === '/login/recruiter') {
     next()
   } else if (to.path === '/admin') {
     if (localStorage.getItem('role') === '1') {

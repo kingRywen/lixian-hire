@@ -5,7 +5,7 @@
       <md-button class="md-accent" @click="$refs.snackbar.close()">确定</md-button>
     </md-snackbar>
     <div id="login-title">
-      <span class="md-title">礼贤招聘</span>
+      <span class="md-title">{{ title }}</span>
     </div>
     <form novalidate @submit.stop.prevent="submit">
       <md-input-container>
@@ -36,7 +36,7 @@
       </md-layout>
     </md-layout>
     <md-layout md-gutter class="register">
-      <router-link to="/register">还没有账号？立即注册账号</router-link>
+      <router-link :to="{ name: 'register', params: { id: $route.params.id || 'index' }}">还没有账号？立即注册账号</router-link>
     </md-layout>
   </div>
 </template>
@@ -50,11 +50,18 @@ export default {
       password: '',
       msg: '',
       showPassword: false,
-      passwordType: 'password'
+      passwordType: 'password',
+      title: '猎头精英汇'
     }
   },
   mounted () {
     this.$refs.snackbar.close()
+    if (this.$route.params.id === 'seeker') {
+      this.title = '我要求职'
+    }
+    if (this.$route.params.id === 'recruiter') {
+      this.title = '我要招聘'
+    }
   },
   methods: {
     togglePasswordType () {
