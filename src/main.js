@@ -7,6 +7,13 @@ import axios from 'axios'
 import VueMaterial from 'vue-material'
 import store from './store'
 import jwt from 'jsonwebtoken'
+import FastClick from 'fastclick'
+
+if ('addEventListener' in document) {
+  document.addEventListener('DOMContentLoaded', function () {
+    FastClick.attach(document.body)
+  }, false)
+}
 
 Vue.config.productionTip = false
 Vue.config.debug = true

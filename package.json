@@ -17,6 +17,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "bcryptjs": "^2.4.3",
+    "fastclick": "^1.0.6",
     "gd-bmp": "^1.2.4",
     "ioredis": "^3.1.4",
     "jsonwebtoken": "^8.0.1",
