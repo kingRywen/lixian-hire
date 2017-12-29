@@ -1,22 +1,12 @@
 <template>
-  <div>
+  <div style="height: calc(100% - 120px);">
     <md-list class="custom-list md-triple-line showItems">
     <md-subheader class="header">热门职位</md-subheader>
     </md-list>
+    <div class="view-wrapper">
       <com-loading :loading="!items.length"></com-loading>
       <pull-to :top-load-method="refresh" @top-state-change="stateChange" @infinite-scroll="loadmore">
         <template slot="top-block" slot-scope="props">
-          <!-- <div class="top-load-wrapper">
-            <svg class="icon"
-                :class="{
-                    'icon-arrow': props.state === 'trigger',
-                    'icon-loading': props.state === 'loading'
-                }"
-                aria-hidden="true">
-              <use :xlink:href="iconLink"></use>
-            </svg>
-            {{ props.stateText }}
-          </div> -->
           <div class="top-load-wrapper">
             <i class="iconfont"
               v-html="iconLink"
@@ -51,10 +41,17 @@
           <md-divider class="md-inset"></md-divider>
         </md-list-item></md-list>
         <div class="loading-bar" v-if="items.length > 7">
+          <span v-if="showMore">
             <i class="iconfont icon-loading" v-html="'&#xe62d;'"></i>
-            加载中
+            下拉加载更多
+          </span>
+          <span v-else>
+            无更多内容
+          </span>
           </div>
       </pull-to>
+    </div>
+      
     
   </div>
 </template>
@@ -70,25 +67,54 @@ export default {
   data () {
     return {
       items: [],
-      iconLink: ''
+      iconLink: '',
+      showMore: true
     }
   },
   mounted () {
     this.getData()
+    this.$store.commit('zeroPageNum')
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      document.querySelectorAll('.scroll-container')[0].scrollTop = vm.$store.state.adminPosition
+    })
   },
   methods: {
     loadmore () {
+      var _this = this
       setTimeout(() => {
         console.log('加载')
+        this.$http.get('/api/getjobpage', {
+          params: {
+            pageNum: this.$store.state.pageNum
+          }
+        })
+        .then(res => {
+          let data = res.data
+          if (!data.length) {
+            _this.showMore = false
+          }
+          for (var i = 0; i < data.length; i++) {
+            let element = data[i]
+            _this.items.push(element)
+          }
+          this.$store.commit('addPageNum')
+        })
       }, 1000)
     },
     refresh (loaded) {
       console.log('刷新数据')
-      this.$http.get('/api/jobs')
+      this.$http.get('/api/getjobpage', {
+        params: {
+          pageNum: 0
+        }
+      })
       .then((res) => {
         this.loading = false
         console.log(res.data)
         loaded('done')
+        this.$store.commit('addPageNum')
         this.items = res.data
       }, err => {
         throw (err)
@@ -105,11 +131,16 @@ export default {
     },
     getData () {
       console.log('发送请求')
-      this.$http.get('/api/jobs')
+      this.$http.get('/api/getjobpage', {
+        params: {
+          pageNum: this.$store.state.pageNum
+        }
+      })
       .then((res) => {
         this.loading = false
         console.log(res.data)
         this.items = res.data
+        this.$store.commit('addPageNum')
       }, err => {
         throw (err)
       })
@@ -167,6 +198,11 @@ export default {
   .money{
   font-size: 12px;
   color: #ff5722
+}
+.view-wrapper {
+    box-sizing: border-box;
+    height: 100%;
+    background: #f6f6f6;
 }
 .icon-loading {
     transform: rotate(0deg);

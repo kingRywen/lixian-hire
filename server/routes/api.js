@@ -17,6 +17,7 @@ module.exports = function () {
 
   // 职位的api
   apiRouter.get('/jobs', apiJob.getAllJobs)
+  apiRouter.get('/getjobpage', apiJob.getPageNumJobs)
   apiRouter.get('/job-details', apiJob.getJobDetail)
   apiRouter.get('/companyInfo', apiJob.getCompanyInfo)
   apiRouter.get('/mark-job', apiJob.markJob)

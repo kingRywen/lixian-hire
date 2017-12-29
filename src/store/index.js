@@ -17,7 +17,9 @@ function getScrollTop () {
 export default new Vuex.Store({
   state: {
     count: 0,
-    position: ''
+    position: '',
+    adminPosition: '',
+    pageNum: 0
   },
   mutations: {
     logOut () {
@@ -29,11 +31,23 @@ export default new Vuex.Store({
     },
     getScrollPosition (state) {
       state.position = getScrollTop()
+    },
+    getAdminScroll (state) {
+      state.adminPosition = document.querySelectorAll('.scroll-container')[0].scrollTop
+    },
+    addPageNum (state) {
+      state.pageNum ++
+    },
+    zeroPageNum (state) {
+      state.pageNum = 0
     }
   },
   actions: {
     getScrollPosition ({commit}) {
       commit('getScrollPosition')
+    },
+    getAdminScroll ({commit}) {
+      commit('getAdminScroll')
     }
   }
 })

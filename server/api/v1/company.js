@@ -13,8 +13,10 @@ const userSendJob = async (ctx) => {
   }
   // 职位表保存求职者的信息
   try {
-    let result = await user.saveUserID(ctx) || await user.saveJobID(ctx)
-    if (!result) {
+    let [saveUserID, saveJobID] = await Promise.all([user.saveUserID(ctx), user.saveJobID(ctx)])
+
+    // let result = await user.saveUserID(ctx) || await user.saveJobID(ctx)
+    if (!saveUserID && !saveJobID) {
       ctx.body = {
         success: false,
         info: '已经投过简历'

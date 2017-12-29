@@ -67,6 +67,7 @@ const getUserMarkCompany = async (ctx) => {
 // 发送简历后保存职位ID
 const saveJobID = async (ctx) => {
   const result = await LoginUserModel.findById(ctx.session._id, 'sendPosition')
+  console.log(result.sendPosition)
   if (result.sendPosition.indexOf(ctx.query.code) !== -1) {
     return false
   }
@@ -236,6 +237,13 @@ const userGetAllList = async (ctx) => {
   return await JobInfoModel.find({}, '_id companyID companyName location education salary name experience')
 }
 
+// 求职者获取分页列表
+const userGetPageList = async (ctx) => {
+  let limit = 10
+  let skip = ctx.request.query.pageNum * limit
+  return await JobInfoModel.find({}, '_id companyID companyName location education salary name experience').skip(skip).limit(limit)
+}
+
 // 求职者获取一个指定ID的职位信息
 const userGetOneJob = async (ctx) => {
   return await JobInfoModel.findById(ctx.request.query.code)
@@ -344,6 +352,7 @@ module.exports = {
   editCompany,
   postPosition,
   userGetAllList,
+  userGetPageList,
   userGetOneJob,
   userGetCompanyInfo,
   userMarkJob,

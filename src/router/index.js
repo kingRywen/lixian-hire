@@ -26,7 +26,6 @@ Vue.use(Router)
 
 export default new Router({
   mode: 'history',
-  // saveScrollPosition: true,
   routes: [
     {
       path: '/login/:id',

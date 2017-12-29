@@ -54,6 +54,10 @@ export default {
       this.$http.get('/api/getResume')
         .then((res) => {
           console.log(res.data)
+          if (!res.data.info) {
+            localStorage.setItem('isEntireInfo', false)
+            return
+          }
           this.info = res.data.info
         })
     }

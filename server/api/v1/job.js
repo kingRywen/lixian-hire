@@ -6,6 +6,12 @@ const getAllJobs = async (ctx) => {
   ctx.body = lists
 }
 
+// 获取指定数字页数的职位列表
+const getPageNumJobs = async (ctx) => {
+  let lists = await user.userGetPageList(ctx)
+  ctx.body = lists
+}
+
 // 获取指定id的职位详细信息
 const getJobDetail = async (ctx) => {
   let mark = false
@@ -61,6 +67,7 @@ const markCompany = async (ctx) => {
 
 module.exports = {
   getAllJobs,
+  getPageNumJobs,
   getJobDetail,
   getCompanyInfo,
   markJob,

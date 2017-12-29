@@ -22,6 +22,15 @@ Vue.config.debug = true
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('demo-token')
   if (to.path === '/admin/resume') {
+    if (localStorage.getItem('isEntireInfo') === 'true') {
+      next('/admin/showResume')
+    }
+    next()
+  }
+  if (to.path === '/admin/showResume') {
+    if (localStorage.getItem('isEntireInfo') === 'false') {
+      next('/admin/resume')
+    }
     next()
   }
   if (to.path === '/') {

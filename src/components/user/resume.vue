@@ -2,7 +2,7 @@
   <div>
     <md-stepper ref="step" @completed="completed()">
 
-      <md-step md-label="完善简历" :md-error="!validJob" :md-continue="validJob" :md-message="invalidJobMessage" md-button-back="返回">
+      <md-step md-label="完善简历" :md-error="!validJob" :md-continue="validJob" :md-message="invalidJobMessage" md-button-back="">
         <p>请完善你的简历</p>
         <md-input-container :class="{'md-input-invalid': !fullNameValid}">
           <md-input type="text" v-model="fullName" required/>
@@ -169,6 +169,7 @@ export default {
         .then((res) => {
           console.log(res.data)
           if (!res.data.info) {
+            localStorage.setItem('isEntireInfo', false)
             return
           }
           this.fullName = res.data.info.fullName

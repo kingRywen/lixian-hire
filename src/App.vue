@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <transition :name="transitionName" v-on:before-leave="beforeLeave">
-        <keep-alive exclude="jobDetail|admin">
+    <transition :name="transitionName">
+        <keep-alive include="admin">
           <router-view></router-view>
         </keep-alive>
     </transition>
@@ -16,13 +16,6 @@ export default {
       transitionName: ''
     }
   },
-  methods: {
-    beforeLeave (to, from, next) {
-      console.log(to)
-      // this.$store.dispatch('getScrollPosition')
-      this.$store.commit('getScrollPosition')
-    }
-  },
   computed: {
     localComputed () {
       return this.transitionName
@@ -32,6 +25,9 @@ export default {
     '$route' (to, from) {
       const toPath = to.path.split('/')[1]
       const fromPath = from.path.split('/')[1]
+      if (fromPath === 'admin' && from.path.split('/').length === 2) {
+        this.$store.dispatch('getAdminScroll')
+      }
       if (toPath === '') {
         this.transitionName = 'login'
         // return

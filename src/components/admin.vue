@@ -41,7 +41,7 @@
           <md-list-item>
             <router-link to="/admin/mark"><i class="iconfont md-icon md-theme-default material-icons">&#xe666;</i> <span>我的收藏</span></router-link>
           </md-list-item>
-          <md-list-item @click="exit" class="md-primary">
+          <md-list-item @click="exit">
             <i class="iconfont md-icon md-theme-default material-icons">&#xe61d;</i> <span>退出</span>
           </md-list-item>
           
@@ -50,10 +50,9 @@
 
       </md-sidenav>
   </div>
-  <!-- <router-view v-if="!$route.meta.keepAlive"></router-view> -->
-  <keep-alive>
+  
     <router-view></router-view>
-  </keep-alive>
+  
   
 </div>
 </template>
